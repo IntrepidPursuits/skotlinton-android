@@ -1,18 +1,17 @@
 package io.intrepid.skotlinton.screens.example1
 
 import android.content.Intent
-
 import butterknife.OnClick
 import io.intrepid.skotlinton.R
-import io.intrepid.skotlinton.base.BaseMvpActivity
+import io.intrepid.skotlinton.base.BaseActivity
 import io.intrepid.skotlinton.base.PresenterConfiguration
 import io.intrepid.skotlinton.screens.example2.Example2Activity
 
-class Example1Activity : BaseMvpActivity<Example1Contract.Presenter>(), Example1Contract.View {
+class Example1Activity : BaseActivity<Example1Screen, Example1Presenter>(), Example1Screen {
 
     override val layoutResourceId: Int = R.layout.activity_example1
 
-    override fun createPresenter(configuration: PresenterConfiguration): Example1Contract.Presenter {
+    override fun createPresenter(configuration: PresenterConfiguration): Example1Presenter {
         return Example1Presenter(this, configuration)
     }
 

@@ -1,7 +1,7 @@
 package io.intrepid.skotlinton.testutils
 
-import io.intrepid.skotlinton.base.BaseContract
 import io.intrepid.skotlinton.base.BasePresenter
+import io.intrepid.skotlinton.base.BaseScreen
 import io.intrepid.skotlinton.logging.CrashReporter
 import io.intrepid.skotlinton.rest.RestApi
 import io.intrepid.skotlinton.settings.UserSettings
@@ -11,7 +11,7 @@ import org.junit.Rule
 import org.mockito.junit.MockitoJUnit
 import org.mockito.junit.MockitoRule
 
-abstract class BasePresenterTest<P : BasePresenter<out BaseContract.View>> {
+abstract class BasePresenterTest<S : BaseScreen, P : BasePresenter<S>> {
     @Rule
     @JvmField
     val mockitoRule: MockitoRule = MockitoJUnit.rule()

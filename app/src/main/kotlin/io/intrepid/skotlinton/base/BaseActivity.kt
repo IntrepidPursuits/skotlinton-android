@@ -10,11 +10,14 @@ import io.intrepid.skotlinton.SkotlintonApplication
 import timber.log.Timber
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
-abstract class BaseActivity : AppCompatActivity() {
+@Suppress("AddVarianceModifier")
+abstract class BaseActivity<S : BaseScreen, P : BasePresenter<S>> : AppCompatActivity() {
 
     protected abstract val layoutResourceId: Int
     protected val skotlintonApplication: SkotlintonApplication
         get() = application as SkotlintonApplication
+
+    protected lateinit var presenter: P
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Timber.v("Lifecycle onCreate: $this")
@@ -22,6 +25,9 @@ abstract class BaseActivity : AppCompatActivity() {
 
         setContentView(layoutResourceId)
         ButterKnife.bind(this)
+        val configuration = skotlintonApplication.getPresenterConfiguration()
+        presenter = createPresenter(configuration).also { lifecycle.addObserver(it) }
+        onViewCreated(savedInstanceState)
     }
 
     @CallSuper
@@ -69,5 +75,14 @@ abstract class BaseActivity : AppCompatActivity() {
     @CallSuper
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase))
+    }
+
+    abstract fun createPresenter(configuration: PresenterConfiguration): P
+
+    /**
+     * Override this method to do any additional screen initialization (ex: setup RecycleView adapter)
+     */
+    protected open fun onViewCreated(savedInstanceState: Bundle?) {
+
     }
 }

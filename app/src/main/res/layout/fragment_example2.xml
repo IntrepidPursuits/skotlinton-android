@@ -9,20 +9,22 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    >
+>
 
     <TextView
         android:id="@+id/example2_previous_ip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
         android:textSize="16sp"
-        />
+    />
 
     <TextView
         android:id="@+id/example2_current_ip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:textColor="@android:color/black"
         android:textSize="16sp"
-        />
+    />
 </LinearLayout>

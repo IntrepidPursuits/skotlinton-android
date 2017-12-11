@@ -6,10 +6,10 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito.verify
 
-internal class Example1PresenterTest : BasePresenterTest<Example1Presenter>() {
+internal class Example1PresenterTest : BasePresenterTest<Example1Screen, Example1Presenter>() {
 
     @Mock
-    lateinit var mockView: Example1Contract.View
+    lateinit var mockView: Example1Screen
 
     @Before
     fun setup() {

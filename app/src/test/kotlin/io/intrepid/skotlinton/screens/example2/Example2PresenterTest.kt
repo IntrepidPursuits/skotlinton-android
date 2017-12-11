@@ -9,9 +9,9 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
 
-internal class Example2PresenterTest : BasePresenterTest<Example2Presenter>() {
+internal class Example2PresenterTest : BasePresenterTest<Example2Screen, Example2Presenter>() {
     @Mock
-    lateinit var mockView: Example2Contract.View
+    lateinit var mockView: Example2Screen
 
     @Before
     fun setup() {
@@ -28,7 +28,7 @@ internal class Example2PresenterTest : BasePresenterTest<Example2Presenter>() {
         `when`(mockRestApi.getMyIp()).thenReturn(Single.just(mockIpModel))
         `when`(mockUserSettings.lastIp).thenReturn(mockPreviousIp)
 
-        presenter.onViewCreated()
+        presenter.screenCreated()
         verify(mockView).showPreviousIpAddress(mockPreviousIp)
         testConfiguration.triggerRxSchedulers()
         verify(mockView).showCurrentIpAddress(mockIp)
@@ -41,7 +41,7 @@ internal class Example2PresenterTest : BasePresenterTest<Example2Presenter>() {
         `when`(mockRestApi.getMyIp()).thenReturn(Single.error(Throwable()))
         `when`(mockUserSettings.lastIp).thenReturn("")
 
-        presenter.onViewCreated()
+        presenter.screenCreated()
         verify(mockView).hidePreviousIpAddress()
     }
 }

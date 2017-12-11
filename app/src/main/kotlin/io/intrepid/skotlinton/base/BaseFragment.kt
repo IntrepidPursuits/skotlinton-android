@@ -1,29 +1,25 @@
 package io.intrepid.skotlinton.base
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import butterknife.ButterKnife
 import butterknife.Unbinder
 import io.intrepid.skotlinton.SkotlintonApplication
 import timber.log.Timber
 
-abstract class BaseFragment<P : BaseContract.Presenter> : Fragment(), BaseContract.View {
+@Suppress("AddVarianceModifier")
+abstract class BaseFragment<S : BaseScreen, P : BasePresenter<S>> : Fragment() {
 
     protected val skotlintonApplication: SkotlintonApplication
         get() = activity.application as SkotlintonApplication
     protected abstract val layoutResourceId: Int
 
-    protected val presenter: P by lazy(LazyThreadSafetyMode.NONE) {
-        val configuration = skotlintonApplication.getPresenterConfiguration()
-        createPresenter(configuration)
-    }
+    protected lateinit var presenter: P
     private var unbinder: Unbinder? = null
 
     @CallSuper
@@ -39,7 +35,7 @@ abstract class BaseFragment<P : BaseContract.Presenter> : Fragment(), BaseContra
     }
 
     /**
-     * Override [.onViewCreated] to handle any logic that needs to occur right after inflating the view.
+     * Override [.onViewCreated] to handle any logic that needs to occur right after inflating the screen.
      * onViewCreated is called immediately after onCreateView
      */
     override final fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -51,12 +47,13 @@ abstract class BaseFragment<P : BaseContract.Presenter> : Fragment(), BaseContra
 
     override final fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val configuration = skotlintonApplication.getPresenterConfiguration()
+        presenter = createPresenter(configuration).also { lifecycle.addObserver(it) }
         onViewCreated(savedInstanceState)
-        presenter.onViewCreated()
     }
 
     /**
-     * Override this method to do any additional view initialization (ex: setup RecyclerView adapter)
+     * Override this method to do any additional screen initialization (ex: setup RecyclerView adapter)
      */
     protected open fun onViewCreated(savedInstanceState: Bundle?) {
     }
@@ -64,16 +61,9 @@ abstract class BaseFragment<P : BaseContract.Presenter> : Fragment(), BaseContra
     abstract fun createPresenter(configuration: PresenterConfiguration): P
 
     @CallSuper
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        presenter.bindView(this)
-    }
-
-    @CallSuper
     override fun onStart() {
         Timber.v("Lifecycle onStart: " + this)
         super.onStart()
-        presenter.bindView(this)
     }
 
     @CallSuper
@@ -92,7 +82,6 @@ abstract class BaseFragment<P : BaseContract.Presenter> : Fragment(), BaseContra
     override fun onStop() {
         Timber.v("Lifecycle onStop: $this")
         super.onStop()
-        presenter.unbindView()
     }
 
     @CallSuper
@@ -106,7 +95,6 @@ abstract class BaseFragment<P : BaseContract.Presenter> : Fragment(), BaseContra
     override fun onDestroy() {
         Timber.v("Lifecycle onDestroy: $this")
         super.onDestroy()
-        presenter.onViewDestroyed()
     }
 
     override fun onDetach() {

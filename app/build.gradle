@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'spoon'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: "io.intrepid.static-analysis"
 apply from: 'version.gradle'
 apply from: 'coverage.gradle'
@@ -19,11 +20,12 @@ ext.getLocalProperty = { propertyName ->
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.2"
+    buildToolsVersion "26.0.3"
 
     defaultConfig {
         applicationId "io.intrepid.skotlinton"
         minSdkVersion 17
+        //noinspection OldTargetApi
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -84,6 +86,10 @@ android {
         test.java.srcDirs += 'src/test/kotlin'
         androidTest.java.srcDirs += 'src/androidTest/kotlin'
     }
+
+    lintOptions {
+        ignore 'ObsoleteLintCustomCheck'
+    }
 }
 
 dependencies {
@@ -91,7 +97,7 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
-    implementation('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
         transitive = true
     }
 
@@ -102,12 +108,17 @@ dependencies {
     implementation "com.android.support:recyclerview-v7:$supportVersion"
     implementation "com.android.support:design:$supportVersion"
 
+    // Architecture
+    implementation "android.arch.lifecycle:runtime:1.0.3"
+    annotationProcessor "android.arch.lifecycle:compiler:1.0.0"
+    implementation "android.arch.lifecycle:extensions:1.0.0"
+
     // Google play services
-    def googlePlayVersion = "11.4.2"
+    def googlePlayVersion = "11.6.2"
     implementation "com.google.android.gms:play-services-base:$googlePlayVersion"
 
     // Rx
-    implementation "io.reactivex.rxjava2:rxjava:2.1.5"
+    implementation "io.reactivex.rxjava2:rxjava:2.1.6"
     implementation "io.reactivex.rxjava2:rxandroid:2.0.1"
 
     // Jake Wharton/Square

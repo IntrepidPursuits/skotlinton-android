@@ -8,7 +8,7 @@ import io.intrepid.skotlinton.R
 import io.intrepid.skotlinton.base.BaseFragment
 import io.intrepid.skotlinton.base.PresenterConfiguration
 
-class Example2Fragment : BaseFragment<Example2Contract.Presenter>(), Example2Contract.View {
+class Example2Fragment : BaseFragment<Example2Screen, Example2Presenter>(), Example2Screen {
 
     @BindView(R.id.example2_current_ip)
     internal lateinit var currentIpView: TextView
@@ -17,7 +17,7 @@ class Example2Fragment : BaseFragment<Example2Contract.Presenter>(), Example2Con
 
     override val layoutResourceId: Int = R.layout.fragment_example2
 
-    override fun createPresenter(configuration: PresenterConfiguration): Example2Contract.Presenter {
+    override fun createPresenter(configuration: PresenterConfiguration): Example2Presenter {
         return Example2Presenter(this, configuration)
     }
 

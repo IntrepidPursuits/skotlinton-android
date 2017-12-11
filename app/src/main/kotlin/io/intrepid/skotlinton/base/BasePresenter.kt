@@ -1,5 +1,8 @@
 package io.intrepid.skotlinton.base
 
+import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleObserver
+import android.arch.lifecycle.OnLifecycleEvent
 import io.intrepid.skotlinton.logging.CrashReporter
 import io.intrepid.skotlinton.rest.RestApi
 import io.intrepid.skotlinton.settings.UserSettings
@@ -8,57 +11,31 @@ import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
+import timber.log.Timber
 
-abstract class BasePresenter<V : BaseContract.View>(protected var view: V?, configuration: PresenterConfiguration) : BaseContract.Presenter {
+abstract class BasePresenter<S : BaseScreen>(protected var screen: S, configuration: PresenterConfiguration) : LifecycleObserver {
 
-    protected val ioScheduler: Scheduler = configuration.ioScheduler
-    protected val uiScheduler: Scheduler = configuration.uiScheduler
+    private val ioScheduler: Scheduler = configuration.ioScheduler
+    private val uiScheduler: Scheduler = configuration.uiScheduler
     protected val userSettings: UserSettings = configuration.userSettings
     protected val restApi: RestApi = configuration.restApi
     protected val crashReporter: CrashReporter = configuration.crashReporter
 
     protected val disposables: CompositeDisposable = CompositeDisposable()
 
-    private var isViewBound = false
-
-    override fun onViewCreated() {
-
+    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+    fun onCreateScreenLifecycle() {
+        Timber.v("Presenter onCreateScreenLifecycle: $this")
+        screenCreated()
     }
 
-    override fun bindView(view: BaseContract.View) {
-        @Suppress("UNCHECKED_CAST")
-        this.view = view as V
-        if (!isViewBound) {
-            onViewBound()
-            isViewBound = true
-        }
-    }
-
-    open protected fun onViewBound() {
-
-    }
-
-    override fun unbindView() {
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    fun onStopScreenLifecycle() {
         disposables.clear()
-        this.view = null
-
-        if (isViewBound) {
-            onViewUnbound()
-            isViewBound = false
-        }
+        Timber.v("Presenter onStopScreenLifecycle: $this")
     }
 
-    open protected fun onViewUnbound() {
-
-    }
-
-    /**
-     * Note: The view will be null at this point. This method is for any additional cleanup that's not handled
-     * by the CompositeDisposable
-     */
-    override fun onViewDestroyed() {
-
-    }
+    open fun screenCreated() {}
 
     fun <T> Observable<T>.subscribeOnIoObserveOnUi(): Observable<T> {
         return applySchedulers(ioScheduler, uiScheduler)

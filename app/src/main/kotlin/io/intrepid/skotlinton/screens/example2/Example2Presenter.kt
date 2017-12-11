@@ -5,26 +5,23 @@ import io.intrepid.skotlinton.base.PresenterConfiguration
 import io.intrepid.skotlinton.utils.RxUtils
 import io.reactivex.functions.Consumer
 
-internal class Example2Presenter(view: Example2Contract.View, configuration: PresenterConfiguration)
-    : BasePresenter<Example2Contract.View>(view, configuration), Example2Contract.Presenter {
+class Example2Presenter(view: Example2Screen, configuration: PresenterConfiguration)
+    : BasePresenter<Example2Screen>(view, configuration) {
 
-    override fun onViewCreated() {
-        super.onViewCreated()
-
-        val disposable = restApi.getMyIp()
+    override fun screenCreated() {
+        disposables.add(restApi.getMyIp()
                 .subscribeOnIoObserveOnUi()
                 .subscribe(Consumer {
                     val ip = it.ip
-                    view?.showCurrentIpAddress(ip)
+                    screen.showCurrentIpAddress(ip)
                     userSettings.lastIp = ip
-                }, RxUtils.logError())
-        disposables.add(disposable)
+                }, RxUtils.logError()))
 
         val lastIp = userSettings.lastIp
         if (lastIp.isEmpty()) {
-            view?.hidePreviousIpAddress()
+            screen.hidePreviousIpAddress()
         } else {
-            view?.showPreviousIpAddress(lastIp)
+            screen.showPreviousIpAddress(lastIp)
         }
     }
 }
