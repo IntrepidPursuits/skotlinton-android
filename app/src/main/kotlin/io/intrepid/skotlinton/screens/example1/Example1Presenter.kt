@@ -7,6 +7,6 @@ class Example1Presenter(view: Example1Screen, configuration: PresenterConfigurat
     : BasePresenter<Example1Screen>(view, configuration) {
 
     fun onButtonClick() {
-        screen.gotoExample2()
+        screen?.gotoExample2()
     }
 }

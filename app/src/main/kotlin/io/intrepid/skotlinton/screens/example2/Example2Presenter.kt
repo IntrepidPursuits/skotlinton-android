@@ -13,15 +13,15 @@ class Example2Presenter(view: Example2Screen, configuration: PresenterConfigurat
                 .subscribeOnIoObserveOnUi()
                 .subscribe(Consumer {
                     val ip = it.ip
-                    screen.showCurrentIpAddress(ip)
+                    screen?.showCurrentIpAddress(ip)
                     userSettings.lastIp = ip
                 }, RxUtils.logError()))
 
         val lastIp = userSettings.lastIp
         if (lastIp.isEmpty()) {
-            screen.hidePreviousIpAddress()
+            screen?.hidePreviousIpAddress()
         } else {
-            screen.showPreviousIpAddress(lastIp)
+            screen?.showPreviousIpAddress(lastIp)
         }
     }
 }

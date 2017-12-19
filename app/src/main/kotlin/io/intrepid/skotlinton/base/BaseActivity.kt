@@ -10,6 +10,7 @@ import io.intrepid.skotlinton.SkotlintonApplication
 import timber.log.Timber
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
+
 @Suppress("AddVarianceModifier")
 abstract class BaseActivity<S : BaseScreen, P : BasePresenter<S>> : AppCompatActivity() {
 
@@ -17,16 +18,13 @@ abstract class BaseActivity<S : BaseScreen, P : BasePresenter<S>> : AppCompatAct
     protected val skotlintonApplication: SkotlintonApplication
         get() = application as SkotlintonApplication
 
-    protected lateinit var presenter: P
+    protected val presenter: P by lazy { createPresenter(skotlintonApplication.getPresenterConfiguration()).also { lifecycle.addObserver(it) } }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Timber.v("Lifecycle onCreate: $this")
         super.onCreate(savedInstanceState)
-
         setContentView(layoutResourceId)
         ButterKnife.bind(this)
-        val configuration = skotlintonApplication.getPresenterConfiguration()
-        presenter = createPresenter(configuration).also { lifecycle.addObserver(it) }
         onViewCreated(savedInstanceState)
     }
 
@@ -69,6 +67,7 @@ abstract class BaseActivity<S : BaseScreen, P : BasePresenter<S>> : AppCompatAct
     @CallSuper
     override fun onDestroy() {
         Timber.v("Lifecycle onDestroy: $this")
+        lifecycle.removeObserver(presenter)
         super.onDestroy()
     }
 

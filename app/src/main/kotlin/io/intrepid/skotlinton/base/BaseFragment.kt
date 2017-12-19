@@ -19,7 +19,7 @@ abstract class BaseFragment<S : BaseScreen, P : BasePresenter<S>> : Fragment() {
         get() = activity.application as SkotlintonApplication
     protected abstract val layoutResourceId: Int
 
-    protected lateinit var presenter: P
+    protected val presenter: P by lazy{ createPresenter(skotlintonApplication.getPresenterConfiguration()).also { lifecycle.addObserver(it) }}
     private var unbinder: Unbinder? = null
 
     @CallSuper
@@ -47,8 +47,6 @@ abstract class BaseFragment<S : BaseScreen, P : BasePresenter<S>> : Fragment() {
 
     override final fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val configuration = skotlintonApplication.getPresenterConfiguration()
-        presenter = createPresenter(configuration).also { lifecycle.addObserver(it) }
         onViewCreated(savedInstanceState)
     }
 
@@ -94,6 +92,7 @@ abstract class BaseFragment<S : BaseScreen, P : BasePresenter<S>> : Fragment() {
     @CallSuper
     override fun onDestroy() {
         Timber.v("Lifecycle onDestroy: $this")
+        lifecycle.removeObserver(presenter)
         super.onDestroy()
     }
 
