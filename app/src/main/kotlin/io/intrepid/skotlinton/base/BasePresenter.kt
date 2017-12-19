@@ -15,8 +15,8 @@ import timber.log.Timber
 
 abstract class BasePresenter<S : BaseScreen>(protected var screen: S, configuration: PresenterConfiguration) : LifecycleObserver {
 
-    private val ioScheduler: Scheduler = configuration.ioScheduler
-    private val uiScheduler: Scheduler = configuration.uiScheduler
+    protected val ioScheduler: Scheduler = configuration.ioScheduler
+    protected val uiScheduler: Scheduler = configuration.uiScheduler
     protected val userSettings: UserSettings = configuration.userSettings
     protected val restApi: RestApi = configuration.restApi
     protected val crashReporter: CrashReporter = configuration.crashReporter
