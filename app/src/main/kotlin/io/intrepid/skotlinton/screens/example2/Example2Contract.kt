@@ -12,7 +12,5 @@ interface Example2Contract {
         fun hidePreviousIpAddress()
     }
 
-    interface Presenter : BaseContract.Presenter {
-
-    }
+    interface Presenter : BaseContract.Presenter
 }

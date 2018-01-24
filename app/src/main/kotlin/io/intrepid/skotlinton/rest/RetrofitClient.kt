@@ -13,15 +13,13 @@ import java.util.concurrent.TimeUnit
 object RetrofitClient {
 
     // TODO: change this to a real endpoint
-    private val BASE_URL = "https://api.ipify.org/"
-    private val CONNECTION_TIMEOUT = 30L
+    private const val BASE_URL = "https://api.ipify.org/"
+    private const val CONNECTION_TIMEOUT = 30L
 
     val restApi: RestApi by lazy { createRestApi(BASE_URL) }
 
     @VisibleForTesting
-    internal fun getTestApi(baseUrl: String): RestApi {
-        return createRestApi(baseUrl)
-    }
+    internal fun getTestApi(baseUrl: String): RestApi = createRestApi(baseUrl)
 
     private fun createRestApi(baseUrl: String): RestApi {
         val builder = OkHttpClient.Builder()

@@ -9,7 +9,7 @@ import org.mockito.Mockito.verify
 internal class Example1PresenterTest : BasePresenterTest<Example1Presenter>() {
 
     @Mock
-    lateinit var mockView: Example1Contract.View
+    private lateinit var mockView: Example1Contract.View
 
     @Before
     fun setup() {

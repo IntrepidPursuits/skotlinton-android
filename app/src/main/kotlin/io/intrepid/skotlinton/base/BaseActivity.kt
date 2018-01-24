@@ -23,7 +23,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     @CallSuper
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         Timber.v("Lifecycle onNewIntent: $this")
         super.onNewIntent(intent)
     }

@@ -34,9 +34,7 @@ abstract class BasePresenter<V : BaseContract.View>(protected var view: V?, conf
         }
     }
 
-    open protected fun onViewBound() {
-
-    }
+    protected open fun onViewBound() = Unit
 
     override fun unbindView() {
         disposables.clear()
@@ -48,23 +46,15 @@ abstract class BasePresenter<V : BaseContract.View>(protected var view: V?, conf
         }
     }
 
-    open protected fun onViewUnbound() {
-
-    }
+    protected open fun onViewUnbound() = Unit
 
     /**
      * Note: The view will be null at this point. This method is for any additional cleanup that's not handled
      * by the CompositeDisposable
      */
-    override fun onViewDestroyed() {
+    override fun onViewDestroyed() = Unit
 
-    }
+    fun <T> Observable<T>.subscribeOnIoObserveOnUi(): Observable<T> = applySchedulers(ioScheduler, uiScheduler)
 
-    fun <T> Observable<T>.subscribeOnIoObserveOnUi(): Observable<T> {
-        return applySchedulers(ioScheduler, uiScheduler)
-    }
-
-    fun <T> Single<T>.subscribeOnIoObserveOnUi(): Single<T> {
-        return applySchedulers(ioScheduler, uiScheduler)
-    }
+    fun <T> Single<T>.subscribeOnIoObserveOnUi(): Single<T> = applySchedulers(ioScheduler, uiScheduler)
 }

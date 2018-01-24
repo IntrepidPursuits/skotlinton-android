@@ -8,7 +8,7 @@ class SharedPreferencesManager private constructor(context: Context) : UserSetti
     private val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     companion object {
-        private val LAST_IP = "last_ip"
+        private const val LAST_IP = "last_ip"
         private var instance: UserSettings? = null
         fun getInstance(context: Context): UserSettings {
             return instance ?: SharedPreferencesManager(context).apply { instance = this }

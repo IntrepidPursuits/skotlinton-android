@@ -9,7 +9,7 @@ import android.support.annotation.CallSuper
  * If the activity is only going to act as a container for a fragment, use {@link BaseFragmentActivity}
  * instead
  */
-abstract class BaseMvpActivity<P : BaseContract.Presenter> : BaseActivity(), BaseContract.View {
+abstract class BaseMvpActivity<out P : BaseContract.Presenter> : BaseActivity(), BaseContract.View {
 
     protected val presenter: P by lazy(LazyThreadSafetyMode.NONE) {
         val configuration = skotlintonApplication.getPresenterConfiguration()
@@ -36,7 +36,7 @@ abstract class BaseMvpActivity<P : BaseContract.Presenter> : BaseActivity(), Bas
     }
 
     @CallSuper
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         presenter.bindView(this)
     }

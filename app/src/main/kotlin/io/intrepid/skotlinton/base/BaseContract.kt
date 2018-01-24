@@ -2,8 +2,7 @@ package io.intrepid.skotlinton.base
 
 interface BaseContract {
 
-    interface View {
-    }
+    interface View
 
     interface Presenter {
         fun bindView(view: View)
