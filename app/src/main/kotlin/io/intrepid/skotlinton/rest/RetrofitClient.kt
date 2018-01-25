@@ -29,11 +29,11 @@ object RetrofitClient {
 
         val httpClient = builder.connectTimeout(CONNECTION_TIMEOUT, TimeUnit.SECONDS).build()
         return Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .client(httpClient)
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build()
-                .create(RestApi::class.java)
+            .baseUrl(baseUrl)
+            .client(httpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .build()
+            .create(RestApi::class.java)
     }
 }

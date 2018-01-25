@@ -9,7 +9,8 @@ import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 
-abstract class BasePresenter<V : BaseContract.View>(protected var view: V?, configuration: PresenterConfiguration) : BaseContract.Presenter {
+abstract class BasePresenter<V : BaseContract.View>(protected var view: V?, configuration: PresenterConfiguration) :
+    BaseContract.Presenter {
 
     protected val ioScheduler: Scheduler = configuration.ioScheduler
     protected val uiScheduler: Scheduler = configuration.uiScheduler
