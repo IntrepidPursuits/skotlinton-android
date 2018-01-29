@@ -109,6 +109,7 @@ dependencies {
     // Rx
     implementation "io.reactivex.rxjava2:rxjava:2.1.8"
     implementation "io.reactivex.rxjava2:rxandroid:2.0.1"
+    implementation "io.reactivex.rxjava2:rxkotlin:2.2.0"
 
     // Jake Wharton/Square
     def retrofitVersion = "2.3.0"
@@ -141,17 +142,22 @@ dependencies {
     def junitLib = "junit:junit:4.12"
     def mockitoVersion = "2.13.0"
     def mockitoLib = "org.mockito:mockito-core:$mockitoVersion"
+    def mockitoKotlinLib = "com.nhaarman:mockito-kotlin-kt1.1:1.5.0"
     def supportAnnotationLib = "com.android.support:support-annotations:$supportVersion"
 
     // Unit tests
     testImplementation junitLib
     testImplementation mockitoLib
     testImplementation supportAnnotationLib
+    testImplementation mockitoKotlinLib
 
     // UI tests
     androidTestImplementation junitLib
     androidTestImplementation mockitoLib
     androidTestImplementation supportAnnotationLib
+    androidTestImplementation(mockitoKotlinLib) {
+        exclude module: "kotlin-reflect"
+    }
     androidTestImplementation "org.mockito:mockito-android:$mockitoVersion"
 
     def androidTestVersion = "1.0.1"
