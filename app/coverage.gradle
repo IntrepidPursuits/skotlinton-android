@@ -12,7 +12,7 @@ def buildVariantDirectory = "${productFlavor}/${buildType}"
 
 def coverageSourceDirs = files(['src/main/kotlin'])
 def coverageClassDirs = fileTree(
-        dir: "${buildDir}/intermediates/classes/${buildVariantDirectory}",
+        dir: "${buildDir}/tmp/kotlin-classes/${buildVariantDirectory}",
         excludes: ['**/R.class',
                    '**/R$*.class',
                    '**/BuildConfig.*',
@@ -53,7 +53,7 @@ task testCoverage(type: JacocoReport, dependsOn: ["test${buildVariant}UnitTest",
 task unitTestCoverage(type: JacocoReport, dependsOn: "test${buildVariant}UnitTest") {
     sourceDirectories = coverageSourceDirs
     classDirectories = fileTree(
-            dir: "${buildDir}/intermediates/classes/${buildVariantDirectory}",
+            dir: "${buildDir}/tmp/kotlin-classes/${buildVariantDirectory}",
             excludes: [*coverageClassDirs.excludes.asList(),
                        '**/*Activity.class',
                        '**/*Fragment.class',
