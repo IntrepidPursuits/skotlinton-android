@@ -54,9 +54,11 @@ task unitTestCoverage(type: JacocoReport, dependsOn: "test${buildVariant}UnitTes
     sourceDirectories = coverageSourceDirs
     classDirectories = fileTree(
             dir: "${buildDir}/intermediates/classes/${buildVariantDirectory}",
-            includes: ['**/*Presenter*',
-                       '**/utils/*'
-                       // Add any additional testable classes here
+            excludes: [*coverageClassDirs.excludes.asList(),
+                       '**/*Activity.class',
+                       '**/*Fragment.class',
+                       '**/*Service.class',
+                       '**/*Application.class'
             ]
     )
     executionData = files("${buildDir}/jacoco/test${buildVariant}UnitTest.exec")
