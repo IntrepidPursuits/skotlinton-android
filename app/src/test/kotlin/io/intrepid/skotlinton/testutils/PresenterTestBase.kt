@@ -11,7 +11,7 @@ import org.junit.Rule
 import org.mockito.junit.MockitoJUnit
 import org.mockito.junit.MockitoRule
 
-abstract class BasePresenterTest<P : BasePresenter<out BaseContract.View>> {
+abstract class PresenterTestBase<P : BasePresenter<out BaseContract.View>> {
     @Rule
     @JvmField
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
