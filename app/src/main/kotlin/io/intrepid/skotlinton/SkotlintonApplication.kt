@@ -28,11 +28,11 @@ open class SkotlintonApplication : Application() {
 
     open fun getPresenterConfiguration(): PresenterConfiguration {
         return PresenterConfiguration(
-                Schedulers.io(),
-                AndroidSchedulers.mainThread(),
-                SharedPreferencesManager.getInstance(this),
-                RetrofitClient.restApi,
-                CrashlyticsReporter
+            Schedulers.io(),
+            AndroidSchedulers.mainThread(),
+            SharedPreferencesManager.getInstance(this),
+            RetrofitClient.restApi,
+            CrashlyticsReporter
         )
     }
 }

@@ -30,7 +30,7 @@ class ExampleSmokeTest : BaseUiTest() {
     val activityTestRule = ActivityTestRule(Example1Activity::class.java, true, false)
 
     @Mock
-    internal lateinit var mockUserSettings: UserSettings
+    private lateinit var mockUserSettings: UserSettings
 
     @Before
     fun setUp() {

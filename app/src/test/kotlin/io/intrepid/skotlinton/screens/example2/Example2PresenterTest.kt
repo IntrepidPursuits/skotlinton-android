@@ -11,7 +11,7 @@ import org.mockito.Mock
 
 internal class Example2PresenterTest : BasePresenterTest<Example2Presenter>() {
     @Mock
-    lateinit var mockView: Example2Contract.View
+    private lateinit var mockView: Example2Contract.View
 
     @Before
     fun setup() {

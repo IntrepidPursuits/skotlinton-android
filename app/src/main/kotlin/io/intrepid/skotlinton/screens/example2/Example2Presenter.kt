@@ -6,8 +6,8 @@ import io.intrepid.skotlinton.utils.RxUtils
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 
-internal class Example2Presenter(view: Example2Contract.View, configuration: PresenterConfiguration)
-    : BasePresenter<Example2Contract.View>(view, configuration), Example2Contract.Presenter {
+internal class Example2Presenter(view: Example2Contract.View, configuration: PresenterConfiguration) :
+    BasePresenter<Example2Contract.View>(view, configuration), Example2Contract.Presenter {
 
     override fun onViewCreated() {
         super.onViewCreated()

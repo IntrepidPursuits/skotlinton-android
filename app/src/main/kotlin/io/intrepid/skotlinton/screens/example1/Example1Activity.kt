@@ -16,8 +16,9 @@ class Example1Activity : BaseMvpActivity<Example1Contract.Presenter>(), Example1
         return Example1Presenter(this, configuration)
     }
 
+    @Suppress("ProtectedInFinal")
     @OnClick(R.id.example1_button)
-    internal fun onButtonClick() {
+    protected fun onButtonClick() {
         presenter.onButtonClick()
     }
 

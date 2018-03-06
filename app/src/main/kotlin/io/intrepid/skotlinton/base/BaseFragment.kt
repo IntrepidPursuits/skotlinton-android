@@ -8,16 +8,15 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import butterknife.ButterKnife
 import butterknife.Unbinder
 import io.intrepid.skotlinton.SkotlintonApplication
 import timber.log.Timber
 
-abstract class BaseFragment<P : BaseContract.Presenter> : Fragment(), BaseContract.View {
+abstract class BaseFragment<out P : BaseContract.Presenter> : Fragment(), BaseContract.View {
 
     protected val skotlintonApplication: SkotlintonApplication
-        get() = activity?.application as SkotlintonApplication
+        get() = activity!!.application as SkotlintonApplication
     protected abstract val layoutResourceId: Int
 
     protected val presenter: P by lazy(LazyThreadSafetyMode.NONE) {
@@ -27,7 +26,7 @@ abstract class BaseFragment<P : BaseContract.Presenter> : Fragment(), BaseContra
     private var unbinder: Unbinder? = null
 
     @CallSuper
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         Timber.v("Lifecycle onAttach: $this to $context")
         super.onAttach(context)
     }
@@ -42,14 +41,18 @@ abstract class BaseFragment<P : BaseContract.Presenter> : Fragment(), BaseContra
      * Override [.onViewCreated] to handle any logic that needs to occur right after inflating the view.
      * onViewCreated is called immediately after onCreateView
      */
-    override final fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    final override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         Timber.v("Lifecycle onCreateView: $this")
         val view = inflater.inflate(layoutResourceId, container, false)
         unbinder = ButterKnife.bind(this, view)
         return view
     }
 
-    override final fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    final override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         onViewCreated(savedInstanceState)
         presenter.onViewCreated()
@@ -58,6 +61,7 @@ abstract class BaseFragment<P : BaseContract.Presenter> : Fragment(), BaseContra
     /**
      * Override this method to do any additional view initialization (ex: setup RecyclerView adapter)
      */
+    @CallSuper
     protected open fun onViewCreated(savedInstanceState: Bundle?) {
     }
 
@@ -71,7 +75,7 @@ abstract class BaseFragment<P : BaseContract.Presenter> : Fragment(), BaseContra
 
     @CallSuper
     override fun onStart() {
-        Timber.v("Lifecycle onStart: " + this)
+        Timber.v("Lifecycle onStart: $this")
         super.onStart()
         presenter.bindView(this)
     }
@@ -109,6 +113,7 @@ abstract class BaseFragment<P : BaseContract.Presenter> : Fragment(), BaseContra
         presenter.onViewDestroyed()
     }
 
+    @CallSuper
     override fun onDetach() {
         Timber.v("Lifecycle onDetach: $this from $context")
         super.onDetach()

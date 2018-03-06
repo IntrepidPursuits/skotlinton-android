@@ -21,16 +21,16 @@ class Example2Fragment : BaseFragment<Example2Contract.Presenter>(), Example2Con
         return Example2Presenter(this, configuration)
     }
 
-    @SuppressLint("SetTextI18n")
     override fun showCurrentIpAddress(ip: String) {
         // This should be extracted to string resource in a real app, but we are inlining this for the
         // example so that string.xml is not cluttered up with example texts
+        @SuppressLint("SetTextI18n")
         currentIpView.text = "Your current Ip address is " + ip
     }
 
-    @SuppressLint("SetTextI18n")
     override fun showPreviousIpAddress(ip: String) {
         previousIpView.visibility = View.VISIBLE
+        @SuppressLint("SetTextI18n")
         previousIpView.text = "Your previous Ip address is " + ip
     }
 
