@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'spoon'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: "io.intrepid.static-analysis"
 apply from: 'version.gradle'
 apply from: 'coverage.gradle'
@@ -96,7 +97,7 @@ dependencies {
     }
 
     // Support libraries
-    def supportVersion = "27.0.2"
+    def supportVersion = "27.1.0"
     implementation "com.android.support:support-v4:$supportVersion"
     implementation "com.android.support:appcompat-v7:$supportVersion"
     implementation "com.android.support:recyclerview-v7:$supportVersion"
