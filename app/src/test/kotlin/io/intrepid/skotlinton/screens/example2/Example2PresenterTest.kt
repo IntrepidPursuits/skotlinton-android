@@ -3,13 +3,13 @@ package io.intrepid.skotlinton.screens.example2
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.intrepid.skotlinton.models.IpModel
-import io.intrepid.skotlinton.testutils.BasePresenterTest
+import io.intrepid.skotlinton.testutils.PresenterTestBase
 import io.reactivex.Single
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 
-internal class Example2PresenterTest : BasePresenterTest<Example2Presenter>() {
+internal class Example2PresenterTest : PresenterTestBase<Example2Presenter>() {
     @Mock
     private lateinit var mockView: Example2Contract.View
 
