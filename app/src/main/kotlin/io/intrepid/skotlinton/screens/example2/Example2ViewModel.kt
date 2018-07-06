@@ -1,0 +1,36 @@
+package io.intrepid.skotlinton.screens.example2
+
+import com.jakewharton.rxrelay2.BehaviorRelay
+import io.intrepid.skotlinton.base.BaseViewModel
+import io.intrepid.skotlinton.base.ViewModelConfiguration
+import io.intrepid.skotlinton.utils.RxUtils
+import io.reactivex.rxkotlin.subscribeBy
+
+class Example2ViewModel(configuration: ViewModelConfiguration) : BaseViewModel(configuration) {
+
+    var currentIpAddressText = BehaviorRelay.create<String>()
+    var previousIpAddressVisible = BehaviorRelay.create<Boolean>()
+    var previousIpAddressText = BehaviorRelay.create<String>()
+
+    init {
+        currentIpAddressText.accept("Retrieving your current IP address")
+        restApi.getMyIp()
+                .subscribeOnIoObserveOnUi()
+                .subscribeBy(
+                        onSuccess = {
+                            val ip = it.ip
+                            currentIpAddressText.accept("Your current IP address is $ip")
+                            userSettings.lastIp = ip
+                        },
+                        onError = RxUtils.logError()
+                )
+
+        val lastIp = userSettings.lastIp
+        if (lastIp.isEmpty()) {
+            previousIpAddressVisible.accept(false)
+        } else {
+            previousIpAddressVisible.accept(true)
+            previousIpAddressText.accept("Your previous IP address is $lastIp")
+        }
+    }
+}

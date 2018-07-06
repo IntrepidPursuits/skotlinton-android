@@ -24,11 +24,11 @@ android {
 
     defaultConfig {
         applicationId "io.intrepid.skotlinton"
-        minSdkVersion 17
+        minSdkVersion 21
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
-
+        multiDexEnabled true
         testInstrumentationRunner "io.intrepid.skotlinton.CustomTestRunner"
     }
 
@@ -101,6 +101,12 @@ dependencies {
     implementation "com.android.support:recyclerview-v7:$supportVersion"
     implementation "com.android.support:design:$supportVersion"
 
+    // architecture components
+    def lifecycle_version = "1.1.1"
+    implementation "android.arch.lifecycle:extensions:$lifecycle_version"
+    kapt "android.arch.lifecycle:compiler:$lifecycle_version"
+    implementation "android.arch.lifecycle:reactivestreams:$lifecycle_version"
+
     // Google play services
     def googlePlayVersion = "11.8.0"
     implementation "com.google.android.gms:play-services-base:$googlePlayVersion"
@@ -109,6 +115,8 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:2.1.8"
     implementation "io.reactivex.rxjava2:rxandroid:2.0.1"
     implementation "io.reactivex.rxjava2:rxkotlin:2.2.0"
+    implementation "com.jakewharton.rxrelay2:rxrelay:2.0.0"
+    implementation "com.jakewharton.rxbinding2:rxbinding-kotlin:2.1.1"
 
     // Jake Wharton/Square
     def retrofitVersion = "2.3.0"
@@ -142,6 +150,7 @@ dependencies {
     def mockitoVersion = "2.13.0"
     def mockitoLib = "org.mockito:mockito-core:$mockitoVersion"
     def mockitoKotlinLib = "com.nhaarman:mockito-kotlin-kt1.1:1.5.0"
+    def kluentLib = 'org.amshove.kluent:kluent-android:1.38'
     def supportAnnotationLib = "com.android.support:support-annotations:$supportVersion"
 
     // Unit tests
@@ -149,6 +158,7 @@ dependencies {
     testImplementation mockitoLib
     testImplementation supportAnnotationLib
     testImplementation mockitoKotlinLib
+    testImplementation kluentLib
 
     // UI tests
     androidTestImplementation junitLib
@@ -157,6 +167,7 @@ dependencies {
     androidTestImplementation(mockitoKotlinLib) {
         exclude module: "kotlin-reflect"
     }
+    androidTestImplementation kluentLib
     androidTestImplementation "org.mockito:mockito-android:$mockitoVersion"
 
     def androidTestVersion = "1.0.1"

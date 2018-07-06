@@ -1,14 +1,16 @@
 package io.intrepid.skotlinton.screens.example2
 
-import android.annotation.SuppressLint
-import android.view.View
+import android.os.Bundle
 import android.widget.TextView
 import butterknife.BindView
+import com.jakewharton.rxbinding2.view.visibility
+import com.jakewharton.rxbinding2.widget.text
 import io.intrepid.skotlinton.R
 import io.intrepid.skotlinton.base.BaseFragment
-import io.intrepid.skotlinton.base.PresenterConfiguration
+import io.intrepid.skotlinton.base.ViewModelConfiguration
+import io.reactivex.rxkotlin.plusAssign
 
-class Example2Fragment : BaseFragment<Example2Contract.Presenter>(), Example2Contract.View {
+class Example2Fragment : BaseFragment<Example2ViewModel>() {
 
     @BindView(R.id.example2_current_ip)
     internal lateinit var currentIpView: TextView
@@ -17,24 +19,17 @@ class Example2Fragment : BaseFragment<Example2Contract.Presenter>(), Example2Con
 
     override val layoutResourceId: Int = R.layout.fragment_example2
 
-    override fun createPresenter(configuration: PresenterConfiguration): Example2Contract.Presenter {
-        return Example2Presenter(this, configuration)
+    override val viewModelClass = Example2ViewModel::class.java
+
+    override fun createViewModel(configuration: ViewModelConfiguration): Example2ViewModel {
+        return Example2ViewModel(configuration)
     }
 
-    override fun showCurrentIpAddress(ip: String) {
-        // This should be extracted to string resource in a real app, but we are inlining this for the
-        // example so that string.xml is not cluttered up with example texts
-        @SuppressLint("SetTextI18n")
-        currentIpView.text = "Your current Ip address is " + ip
-    }
+    override fun onViewCreated(savedInstanceState: Bundle?) {
+        super.onViewCreated(savedInstanceState)
 
-    override fun showPreviousIpAddress(ip: String) {
-        previousIpView.visibility = View.VISIBLE
-        @SuppressLint("SetTextI18n")
-        previousIpView.text = "Your previous Ip address is " + ip
-    }
-
-    override fun hidePreviousIpAddress() {
-        previousIpView.visibility = View.GONE
+        onDestroyViewDisposable += viewModel.currentIpAddressText.subscribe(currentIpView.text())
+        onDestroyViewDisposable += viewModel.previousIpAddressText.subscribe(previousIpView.text())
+        onDestroyViewDisposable += viewModel.previousIpAddressVisible.subscribe(previousIpView.visibility())
     }
 }

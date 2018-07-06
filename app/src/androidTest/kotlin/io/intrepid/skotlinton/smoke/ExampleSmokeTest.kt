@@ -45,8 +45,8 @@ class ExampleSmokeTest : BaseUiTest() {
 
         whenever(mockUserSettings.lastIp).thenReturn("127.0.0.2")
 
-        onView(withId(R.id.example1_button)).perform(click())
-        onView(withId(R.id.example2_current_ip)).check(matches(withText("Your current Ip address is 127.0.0.1")))
-        onView(withId(R.id.example2_previous_ip)).check(matches(withText("Your previous Ip address is 127.0.0.2")))
+        onView(withId(R.id.next_button)).perform(click())
+        onView(withId(R.id.example2_current_ip)).check(matches(withText("Your current IP address is 127.0.0.1")))
+        onView(withId(R.id.example2_previous_ip)).check(matches(withText("Your previous IP address is 127.0.0.2")))
     }
 }
