@@ -5,12 +5,13 @@ import android.content.Intent
 import android.widget.Toast
 import butterknife.OnClick
 import io.intrepid.skotlinton.R
-import io.intrepid.skotlinton.base.BaseMvpActivity
+import io.intrepid.skotlinton.base.BaseMvvmActivity
 import io.intrepid.skotlinton.base.ViewModelConfiguration
 import io.intrepid.skotlinton.screens.example2.Example2Activity
 import io.reactivex.rxkotlin.plusAssign
 
-class Example1Activity : BaseMvpActivity<Example1ViewModel>() {
+@Suppress("ProtectedInFinal")
+class Example1Activity : BaseMvvmActivity<Example1ViewModel>() {
 
     override val layoutResourceId: Int = R.layout.activity_example1
 
@@ -31,12 +32,12 @@ class Example1Activity : BaseMvpActivity<Example1ViewModel>() {
     }
 
     @OnClick(R.id.next_button)
-    fun onButtonClick() {
+    protected fun onButtonClick() {
         viewModel.onNextClick()
     }
 
     @OnClick(R.id.show_toast_button)
-    fun onShowToastClick() {
+    protected fun onShowToastClick() {
         viewModel.onShowToastClick()
     }
 

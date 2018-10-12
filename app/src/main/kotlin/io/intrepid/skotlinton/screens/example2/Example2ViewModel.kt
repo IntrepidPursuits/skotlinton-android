@@ -8,9 +8,9 @@ import io.reactivex.rxkotlin.subscribeBy
 
 class Example2ViewModel(configuration: ViewModelConfiguration) : BaseViewModel(configuration) {
 
-    var currentIpAddressText = BehaviorRelay.create<String>()
-    var previousIpAddressVisible = BehaviorRelay.create<Boolean>()
-    var previousIpAddressText = BehaviorRelay.create<String>()
+    val currentIpAddressText = BehaviorRelay.create<String>()
+    val previousIpAddressVisible = BehaviorRelay.create<Boolean>()
+    val previousIpAddressText = BehaviorRelay.create<String>()
 
     init {
         currentIpAddressText.accept("Retrieving your current IP address")

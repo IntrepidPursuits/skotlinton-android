@@ -26,7 +26,7 @@ The project contains the following components:
 
 -   Commonly used third party dependencies (support library, RxJava, Jake Wharton Experience, etc)
 -   Gradle configuration (build types, signing configs, retrolambda)
--   Base MVP framework (includes a few examples and how they are used in tests)
+-   Base MVVM framework (includes a few examples and how they are used in tests)
 -   Various other setups that we often do when starting projects (tests, custom Application, Retrofit, Timber, Crashlytics, common strings, etc)
 
 ## Cloning the project
@@ -87,10 +87,10 @@ The app uses the popular MVVM architecture to allow for separation of logic and 
 
 ### Base Classes
 - `BaseActivity`: Base class for all activities. Includes lifecycle logging and view inflation.
-- `BaseMvpActivity`: Base class for activities that will have some business logic instead of just hosting a fragment. Includes setup for creating view models.
-- `BaseFragmentActivity`: Base class for activities whose sole purpose to to host a fragment. If the activity contains any additional logic, use `BaseMvpActivity` instead.
-- `BaseFragment`: Basically the same as `BaseMvpActivity`, but for fragments.
-- `BaseViewModel`: Base class for all view models. Includes lifecycle setup and common dependencies. Goes along with `BaseMvpActivity` and `BaseFragment`.
+- `BaseMvvmActivity`: Base class for activities that will have some business logic instead of just hosting a fragment. Includes setup for creating view models.
+- `BaseFragmentActivity`: Base class for activities whose sole purpose to to host a fragment. If the activity contains any additional logic, use `BaseMvvmActivity` instead.
+- `BaseFragment`: Basically the same as `BaseMvvmActivity`, but for fragments.
+- `BaseViewModel`: Base class for all view models. Includes lifecycle setup and common dependencies. Goes along with `BaseMvvmActivity` and `BaseFragment`.
 - `ViewModelConfiguration`: Wrapper class for common dependencies that all view models are expected to have.
 
 ### Third Party Libraries

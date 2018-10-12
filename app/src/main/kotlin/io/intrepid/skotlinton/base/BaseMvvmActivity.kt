@@ -12,7 +12,7 @@ import io.reactivex.disposables.CompositeDisposable
  * If the activity is only going to act as a container for a fragment, use {@link BaseFragmentActivity}
  * instead
  */
-abstract class BaseMvpActivity<VM : BaseViewModel> : BaseActivity() {
+abstract class BaseMvvmActivity<VM : BaseViewModel> : BaseActivity() {
 
     protected val onPauseDisposable = CompositeDisposable()
     protected val onStopDisposable = CompositeDisposable()
