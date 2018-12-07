@@ -16,7 +16,7 @@ Kotlin port of [Android Skeleton](https://github.com/IntrepidPursuits/skeleton-a
     1. [UI/Instrumentation Tests](#uiinstrumentation-tests)
     1. [Code Coverage](#code-coverage)
 1. [Architecture](#architecture)
-    1. [Model-View-Presenter](#model-view-presenter)
+    1. [Model-View-ViewModel](#model-view-viewmodel)
     1. [Base Classes](#base-classes)
     1. [Third Party Libraries](#third-party-libraries)
 1. [History](#history)
@@ -26,7 +26,7 @@ The project contains the following components:
 
 -   Commonly used third party dependencies (support library, RxJava, Jake Wharton Experience, etc)
 -   Gradle configuration (build types, signing configs, retrolambda)
--   Base MVP framework (includes a few examples and how they are used in tests)
+-   Base MVVM framework (includes a few examples and how they are used in tests)
 -   Various other setups that we often do when starting projects (tests, custom Application, Retrofit, Timber, Crashlytics, common strings, etc)
 
 ## Cloning the project
@@ -82,20 +82,19 @@ UI (Espresso) tests exist under the "androidTest" directory. The project also us
 Code coverage configuration are handled by [coverage.gradle](app/coverage.gradle). To generate a code coverage report, use `./gradlew testCoverage`. This will run both unit and instrumentation tests and merge the result of both tests into a single report.
 
 ## Architecture
-### Model-View-Presenter
-The app uses the popular MVP architecture to allow for separation of logic and ease of testing. In this paradigm, all business logic should live inside presenters (but they can delegate some tasks to other classes that are injected as dependencies). Activities and fragment will act as "views", they should not have any logic other than passing the user events to the presenter and displaying the data. There are also Contract classes that specify the communication interface between the views and presenters.
+### Model-View-ViewModel
+The app uses the popular MVVM architecture to allow for separation of logic and ease of testing. In this paradigm, all business logic should live inside viewmodel (but they can delegate some tasks to other classes that are injected as dependencies). Activities and fragment will act as "views", they should not have any logic other than passing the user events to the view model and displaying the data. ViewModels will expose view states as Rx Observables (typically backed by BehaviorRelay) which the View can subscribe to.
 
 ### Base Classes
 - `BaseActivity`: Base class for all activities. Includes lifecycle logging and view inflation.
-- `BaseMvpActivity`: Base class for activities that will have some business logic instead of just hosting a fragment. Includes setup for interactions with presenter.
-- `BaseFragmentActivity`: Base class for activities whose sole purpose to to host a fragment. If the activity contains any additional logic, use `BaseMvpActivity` instead.
-- `BaseFragment`: Basically the same as `BaseMvpActivity`, but for fragments.
-- `BasePresenter`: Base class for all presenters. Includes lifecycle setup and common dependencies. Goes along with `BaseMvpActivity` and `BaseFragment`.
-- `BaseContract`: Includes interfaces that all views and presenters should implement.
-- `PresenterConfiguration`: Wrapper class for common dependencies that all presenters are expected to have.
+- `BaseMvvmActivity`: Base class for activities that will have some business logic instead of just hosting a fragment. Includes setup for creating view models.
+- `BaseFragmentActivity`: Base class for activities whose sole purpose to to host a fragment. If the activity contains any additional logic, use `BaseMvvmActivity` instead.
+- `BaseFragment`: Basically the same as `BaseMvvmActivity`, but for fragments.
+- `BaseViewModel`: Base class for all view models. Includes lifecycle setup and common dependencies. Goes along with `BaseMvvmActivity` and `BaseFragment`.
+- `ViewModelConfiguration`: Wrapper class for common dependencies that all view models are expected to have.
 
 ### Third Party Libraries
-- RxJava/RxAndroid (helps with asynchronous event handling)
+- RxJava/RxAndroid (MVVM view binding and asynchronous event handling)
 - ButterKnife (easier view binding)
 - Retrofit/OkHttp (simplifies network requests)
 - Timber (better logging tool)

@@ -8,7 +8,7 @@ import io.intrepid.skotlinton.R
 /**
  * Base class for activities whose sole purpose to to host a fragment. Child classes simply need
  * to override [.createFragment] and create the appropriate Fragment. If the activity
- * contains any additional logic, use [BaseMvpActivity] instead
+ * contains any additional logic, use [BaseMvvmActivity] instead
  */
 abstract class BaseFragmentActivity : BaseActivity() {
     override val layoutResourceId: Int = R.layout.activity_fragment_container

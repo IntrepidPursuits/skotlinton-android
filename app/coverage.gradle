@@ -49,7 +49,7 @@ task testCoverage(type: JacocoReport, dependsOn: ["test${buildVariant}UnitTest",
 }
 
 // Run and generate the report for the unit tests. The test report only includes the coverage data for
-// the presenter and utils classes since we generally don't unit test any Android related classes
+// the view model and utils classes since we generally don't unit test any Android related classes
 task unitTestCoverage(type: JacocoReport, dependsOn: "test${buildVariant}UnitTest") {
     sourceDirectories = coverageSourceDirs
     classDirectories = fileTree(

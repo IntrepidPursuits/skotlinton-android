@@ -1,5 +1,8 @@
 package io.intrepid.skotlinton.base
 
+import android.arch.lifecycle.ViewModel
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -11,18 +14,34 @@ import android.view.ViewGroup
 import butterknife.ButterKnife
 import butterknife.Unbinder
 import io.intrepid.skotlinton.SkotlintonApplication
+import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 
-abstract class BaseFragment<out P : BaseContract.Presenter> : Fragment(), BaseContract.View {
+abstract class BaseFragment<out VM : BaseViewModel> : Fragment() {
 
     protected val skotlintonApplication: SkotlintonApplication
-        get() = activity!!.application as SkotlintonApplication
+        get() = requireActivity().application as SkotlintonApplication
     protected abstract val layoutResourceId: Int
 
-    protected val presenter: P by lazy(LazyThreadSafetyMode.NONE) {
-        val configuration = skotlintonApplication.getPresenterConfiguration()
-        createPresenter(configuration)
+    protected val onPauseDisposable = CompositeDisposable()
+    protected val onStopDisposable = CompositeDisposable()
+    protected val onDestroyViewDisposable = CompositeDisposable()
+    protected val onDestroyDisposable = CompositeDisposable()
+
+    @Suppress("UNCHECKED_CAST")
+    protected val viewModel: VM by lazy(LazyThreadSafetyMode.NONE) {
+        val factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                val configuration = skotlintonApplication.getViewModelConfiguration()
+                return createViewModel(configuration) as T
+            }
+        }
+        ViewModelProviders.of(this, factory).get(viewModelClass) as VM
     }
+
+    abstract val viewModelClass: Class<out ViewModel>
+    abstract fun createViewModel(configuration: ViewModelConfiguration): VM
+
     private var unbinder: Unbinder? = null
 
     @CallSuper
@@ -38,7 +57,7 @@ abstract class BaseFragment<out P : BaseContract.Presenter> : Fragment(), BaseCo
     }
 
     /**
-     * Override [.onViewCreated] to handle any logic that needs to occur right after inflating the view.
+     * Override [onViewCreated] to handle any logic that needs to occur right after inflating the view.
      * onViewCreated is called immediately after onCreateView
      */
     final override fun onCreateView(
@@ -55,7 +74,6 @@ abstract class BaseFragment<out P : BaseContract.Presenter> : Fragment(), BaseCo
     final override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         onViewCreated(savedInstanceState)
-        presenter.onViewCreated()
     }
 
     /**
@@ -65,19 +83,16 @@ abstract class BaseFragment<out P : BaseContract.Presenter> : Fragment(), BaseCo
     protected open fun onViewCreated(savedInstanceState: Bundle?) {
     }
 
-    abstract fun createPresenter(configuration: PresenterConfiguration): P
-
     @CallSuper
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        Timber.v("Lifecycle onActivityResult: $this")
         super.onActivityResult(requestCode, resultCode, data)
-        presenter.bindView(this)
     }
 
     @CallSuper
     override fun onStart() {
         Timber.v("Lifecycle onStart: $this")
         super.onStart()
-        presenter.bindView(this)
     }
 
     @CallSuper
@@ -90,13 +105,14 @@ abstract class BaseFragment<out P : BaseContract.Presenter> : Fragment(), BaseCo
     override fun onPause() {
         Timber.v("Lifecycle onPause: $this")
         super.onPause()
+        onPauseDisposable.clear()
     }
 
     @CallSuper
     override fun onStop() {
         Timber.v("Lifecycle onStop: $this")
         super.onStop()
-        presenter.unbindView()
+        onStopDisposable.clear()
     }
 
     @CallSuper
@@ -104,13 +120,14 @@ abstract class BaseFragment<out P : BaseContract.Presenter> : Fragment(), BaseCo
         Timber.v("Lifecycle onDestroyView: $this")
         super.onDestroyView()
         unbinder?.unbind()
+        onDestroyViewDisposable.clear()
     }
 
     @CallSuper
     override fun onDestroy() {
         Timber.v("Lifecycle onDestroy: $this")
         super.onDestroy()
-        presenter.onViewDestroyed()
+        onDestroyDisposable.clear()
     }
 
     @CallSuper
