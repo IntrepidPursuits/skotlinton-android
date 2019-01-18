@@ -15,7 +15,7 @@ class SharedPreferencesManager private constructor(context: Context) : UserSetti
         }
     }
 
-    override var lastIp: String
+    override var lastIp: String?
         get() = preferences.getString(LAST_IP, "")
         set(value) = preferences.edit().putString(LAST_IP, value).apply()
 }

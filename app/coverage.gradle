@@ -1,7 +1,7 @@
 apply plugin: 'jacoco'
 
 jacoco {
-    toolVersion = "0.7.7.201606060606"
+    toolVersion = "0.8.2"
 }
 
 // change the buildType and productFlavor fields here if the project uses different build variant for testing
@@ -44,7 +44,7 @@ task testCoverage(type: JacocoReport, dependsOn: ["test${buildVariant}UnitTest",
 
     reports {
         xml.enabled true
-        xml.destination "${buildDir}/reports/jacoco/testCoverage/jacoco.xml"
+        xml.destination file("${buildDir}/reports/jacoco/testCoverage/jacoco.xml")
     }
 }
 
@@ -82,7 +82,7 @@ task unitTestCoverage(type: JacocoReport, dependsOn: "test${buildVariant}UnitTes
 
     reports {
         xml.enabled true
-        xml.destination "${buildDir}/reports/jacoco/unitTestCoverage/jacoco.xml"
+        xml.destination file("${buildDir}/reports/jacoco/unitTestCoverage/jacoco.xml")
     }
 }
 
@@ -99,7 +99,7 @@ task instrumentationTestCoverage(type: JacocoReport, dependsOn: "spoon${buildVar
 
     reports {
         xml.enabled true
-        xml.destination "${buildDir}/reports/jacoco/instrumentationTestCoverage/jacoco.xml"
+        xml.destination file("${buildDir}/reports/jacoco/instrumentationTestCoverage/jacoco.xml")
     }
 }
 
@@ -109,15 +109,11 @@ android {
             testCoverageEnabled(isRunningInstrumentationCoverage)
         }
     }
+}
 
-    testOptions {
-        unitTests.all {
-            jacoco {
-                // needed so that Robolectric tests are included in the results
-                includeNoLocationClasses = true
-            }
-        }
-    }
+tasks.withType(Test) {
+    // needed so that Robolectric tests are included in the results
+    jacoco.includeNoLocationClasses = true
 }
 
 spoon {

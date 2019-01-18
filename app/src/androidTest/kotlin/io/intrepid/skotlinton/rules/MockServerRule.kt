@@ -1,7 +1,7 @@
 package io.intrepid.skotlinton.rules
 
-import android.support.annotation.RawRes
-import android.support.test.InstrumentationRegistry
+import androidx.annotation.RawRes
+import androidx.test.platform.app.InstrumentationRegistry
 import io.intrepid.skotlinton.testutils.TestFileUtils
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -23,11 +23,10 @@ class MockServerRule : TestRule {
 
     /**
      * Enqueues a file as the response of the next server request
-
      * @param jsonRes The raw resource id. The file should be under the "androidTest/res/raw" directory
      */
     fun enqueueResponse(@RawRes jsonRes: Int) {
-        val inputStream = InstrumentationRegistry.getContext().resources.openRawResource(jsonRes)
+        val inputStream = InstrumentationRegistry.getInstrumentation().context.resources.openRawResource(jsonRes)
         val serverResponse = TestFileUtils.convertStreamToString(inputStream)
         server.enqueue(MockResponse().setResponseCode(200).setBody(serverResponse))
     }

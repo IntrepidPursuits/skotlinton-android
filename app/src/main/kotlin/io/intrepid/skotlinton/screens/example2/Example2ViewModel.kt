@@ -4,6 +4,7 @@ import com.jakewharton.rxrelay2.BehaviorRelay
 import io.intrepid.skotlinton.base.BaseViewModel
 import io.intrepid.skotlinton.base.ViewModelConfiguration
 import io.intrepid.skotlinton.utils.RxUtils
+import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 
 class Example2ViewModel(configuration: ViewModelConfiguration) : BaseViewModel(configuration) {
@@ -14,7 +15,7 @@ class Example2ViewModel(configuration: ViewModelConfiguration) : BaseViewModel(c
 
     init {
         currentIpAddressText.accept("Retrieving your current IP address")
-        restApi.getMyIp()
+        networkDisposables += restApi.getMyIp()
                 .subscribeOnIoObserveOnUi()
                 .subscribeBy(
                         onSuccess = {
@@ -26,7 +27,7 @@ class Example2ViewModel(configuration: ViewModelConfiguration) : BaseViewModel(c
                 )
 
         val lastIp = userSettings.lastIp
-        if (lastIp.isEmpty()) {
+        if (lastIp.isNullOrEmpty()) {
             previousIpAddressVisible.accept(false)
         } else {
             previousIpAddressVisible.accept(true)

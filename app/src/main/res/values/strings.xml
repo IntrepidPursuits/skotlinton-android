@@ -1,10 +1,10 @@
-<resources>
-    <string name="common_ok">OK</string>
-    <string name="common_yes">Yes</string>
-    <string name="common_no">No</string>
-    <string name="common_cancel">Cancel</string>
-    <string name="common_delete">Delete</string>
-    <string name="common_remove">Remove</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="common_ok" tools:ignore="UnusedResources">OK</string>
+    <string name="common_yes" tools:ignore="UnusedResources">Yes</string>
+    <string name="common_no" tools:ignore="UnusedResources">No</string>
+    <string name="common_cancel" tools:ignore="UnusedResources">Cancel</string>
+    <string name="common_delete" tools:ignore="UnusedResources">Delete</string>
+    <string name="common_remove" tools:ignore="UnusedResources">Remove</string>
 
     <string name="app_name">Skotlinton</string>
 </resources>
