@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.widget.TextView
 import butterknife.BindView
 import com.jakewharton.rxbinding2.view.visibility
-import com.jakewharton.rxbinding2.widget.text
 import io.intrepid.skotlinton.R
 import io.intrepid.skotlinton.base.BaseFragment
 import io.intrepid.skotlinton.base.ViewModelConfiguration
@@ -28,8 +27,8 @@ class Example2Fragment : BaseFragment<Example2ViewModel>() {
     override fun onViewCreated(savedInstanceState: Bundle?) {
         super.onViewCreated(savedInstanceState)
 
-        onDestroyViewDisposable += viewModel.currentIpAddressText.subscribe(currentIpView.text())
-        onDestroyViewDisposable += viewModel.previousIpAddressText.subscribe(previousIpView.text())
+        onDestroyViewDisposable += viewModel.currentIpAddressText.subscribe(currentIpView::setText)
+        onDestroyViewDisposable += viewModel.previousIpAddressText.subscribe(previousIpView::setText)
         onDestroyViewDisposable += viewModel.previousIpAddressVisible.subscribe(previousIpView.visibility())
     }
 }

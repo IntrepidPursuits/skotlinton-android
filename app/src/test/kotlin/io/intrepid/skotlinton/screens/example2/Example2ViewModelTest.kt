@@ -1,7 +1,7 @@
 package io.intrepid.skotlinton.screens.example2
 
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import io.intrepid.skotlinton.models.IpModel
 import io.intrepid.skotlinton.testutils.BaseViewModelTest
 import io.reactivex.Single

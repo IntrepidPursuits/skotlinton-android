@@ -1,8 +1,8 @@
 package io.intrepid.skotlinton.screens.example1
 
-import android.arch.lifecycle.ViewModel
 import android.content.Intent
 import android.widget.Toast
+import androidx.lifecycle.ViewModel
 import butterknife.OnClick
 import io.intrepid.skotlinton.R
 import io.intrepid.skotlinton.base.BaseMvvmActivity

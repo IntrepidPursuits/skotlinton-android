@@ -1,6 +1,6 @@
 package io.intrepid.skotlinton.screens.example1
 
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.whenever
 import io.intrepid.skotlinton.testutils.BaseViewModelTest
 import io.reactivex.observers.TestObserver
 import org.junit.Before

@@ -2,8 +2,8 @@ package io.intrepid.skotlinton.base
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.annotation.CallSuper
-import android.support.v7.app.AppCompatActivity
+import androidx.annotation.CallSuper
+import androidx.appcompat.app.AppCompatActivity
 import butterknife.ButterKnife
 import io.intrepid.skotlinton.SkotlintonApplication
 import timber.log.Timber

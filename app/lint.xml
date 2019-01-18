@@ -42,7 +42,10 @@
     <!-- Increase severity of incorrect Gradle paths -->
     <issue id="GradlePath" severity="error" />
 
-    <!-- Notify of newer library versions -->
+    <!-- Notify of newer versions of gradle dependency-->
+    <issue id="GradleDependency" severity="informational" />
+
+    <!-- Similar to GradleDependency, but works with any MavenCentral dependency. This is disabled by default. See the link at the top for more details.-->
     <issue id="NewerVersionAvailable" severity="informational" />
 
     <!-- Enable checking for incorrect icon sizes -->

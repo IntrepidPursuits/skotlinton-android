@@ -1,6 +1,6 @@
 package io.intrepid.skotlinton.rest
 
-import android.support.annotation.VisibleForTesting
+import androidx.annotation.VisibleForTesting
 import io.intrepid.skotlinton.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
