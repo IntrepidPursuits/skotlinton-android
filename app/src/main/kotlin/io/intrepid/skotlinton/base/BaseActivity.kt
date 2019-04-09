@@ -4,11 +4,15 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LifecycleOwner
 import butterknife.ButterKnife
 import io.intrepid.skotlinton.SkotlintonApplication
+import io.intrepid.skotlinton.utils.LiveDataObserver
 import timber.log.Timber
 
-abstract class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity : AppCompatActivity(), LiveDataObserver {
+
+    override val liveDataLifecycleOwner: LifecycleOwner get() = this
 
     protected abstract val layoutResourceId: Int
     protected val skotlintonApplication: SkotlintonApplication

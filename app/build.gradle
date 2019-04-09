@@ -111,7 +111,7 @@ dependencies {
     def lifecycle_version = "2.0.0"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-reactivestreams:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-reactivestreams-ktx:$lifecycle_version"
 
     // Google play services
     def googlePlayVersion = "16.1.0"
@@ -167,6 +167,7 @@ dependencies {
     // need to explicitly declare this as AS 3.3 somehow can't run the test without this
     // https://github.com/MarkusAmshove/Kluent/issues/130
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+    testImplementation "android.arch.core:core-testing:1.1.1"
 
     // UI tests
     androidTestImplementation junitLib
@@ -183,6 +184,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
     androidTestImplementation "androidx.test.espresso:espresso-idling-resource:$espressoVersion"
     androidTestImplementation "com.squareup.okhttp3:mockwebserver:$okhttpVersion"
+    androidTestImplementation "android.arch.core:core-testing:1.1.1"
 
     // Forcing to use an older version right now since newer versions have issues with jetifier
     // https://github.com/raphw/byte-buddy/issues/541

@@ -8,25 +8,23 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import butterknife.ButterKnife
 import butterknife.Unbinder
 import io.intrepid.skotlinton.SkotlintonApplication
-import io.reactivex.disposables.CompositeDisposable
+import io.intrepid.skotlinton.utils.LiveDataObserver
 import timber.log.Timber
 
-abstract class BaseFragment<out VM : BaseViewModel> : Fragment() {
+abstract class BaseFragment<out VM : BaseViewModel> : Fragment(), LiveDataObserver {
+
+    override val liveDataLifecycleOwner: LifecycleOwner get() = viewLifecycleOwner
 
     protected val skotlintonApplication: SkotlintonApplication
         get() = requireActivity().application as SkotlintonApplication
     protected abstract val layoutResourceId: Int
-
-    protected val onPauseDisposable = CompositeDisposable()
-    protected val onStopDisposable = CompositeDisposable()
-    protected val onDestroyViewDisposable = CompositeDisposable()
-    protected val onDestroyDisposable = CompositeDisposable()
 
     @Suppress("UNCHECKED_CAST")
     protected val viewModel: VM by lazy(LazyThreadSafetyMode.NONE) {
@@ -105,14 +103,12 @@ abstract class BaseFragment<out VM : BaseViewModel> : Fragment() {
     override fun onPause() {
         Timber.v("Lifecycle onPause: $this")
         super.onPause()
-        onPauseDisposable.clear()
     }
 
     @CallSuper
     override fun onStop() {
         Timber.v("Lifecycle onStop: $this")
         super.onStop()
-        onStopDisposable.clear()
     }
 
     @CallSuper
@@ -120,14 +116,12 @@ abstract class BaseFragment<out VM : BaseViewModel> : Fragment() {
         Timber.v("Lifecycle onDestroyView: $this")
         super.onDestroyView()
         unbinder?.unbind()
-        onDestroyViewDisposable.clear()
     }
 
     @CallSuper
     override fun onDestroy() {
         Timber.v("Lifecycle onDestroy: $this")
         super.onDestroy()
-        onDestroyDisposable.clear()
     }
 
     @CallSuper

@@ -1,15 +1,16 @@
 package io.intrepid.skotlinton.screens.example1
 
 import com.nhaarman.mockitokotlin2.whenever
-import io.intrepid.skotlinton.testutils.BaseViewModelTest
+import io.intrepid.skotlinton.testutils.ViewModelTestBase
+import io.intrepid.skotlinton.utils.ViewEvent
 import io.reactivex.observers.TestObserver
 import org.junit.Before
 import org.junit.Test
 
-internal class Example1ViewModelTest : BaseViewModelTest() {
+internal class Example1ViewModelTest : ViewModelTestBase() {
 
     private lateinit var viewModel: Example1ViewModel
-    private lateinit var eventObserver: TestObserver<Example1ViewEvent>
+    private lateinit var eventObserver: TestObserver<ViewEvent>
 
     @Before
     fun setup() {

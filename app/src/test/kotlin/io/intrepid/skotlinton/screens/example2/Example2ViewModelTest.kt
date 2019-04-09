@@ -3,12 +3,12 @@ package io.intrepid.skotlinton.screens.example2
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.intrepid.skotlinton.models.IpModel
-import io.intrepid.skotlinton.testutils.BaseViewModelTest
+import io.intrepid.skotlinton.testutils.ViewModelTestBase
 import io.reactivex.Single
 import org.amshove.kluent.shouldEqual
 import org.junit.Test
 
-internal class Example2ViewModelTest : BaseViewModelTest() {
+internal class Example2ViewModelTest : ViewModelTestBase() {
 
     private lateinit var viewModel: Example2ViewModel
 

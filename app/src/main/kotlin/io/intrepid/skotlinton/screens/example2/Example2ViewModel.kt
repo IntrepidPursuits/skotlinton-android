@@ -1,6 +1,6 @@
 package io.intrepid.skotlinton.screens.example2
 
-import com.jakewharton.rxrelay2.BehaviorRelay
+import androidx.lifecycle.MutableLiveData
 import io.intrepid.skotlinton.base.BaseViewModel
 import io.intrepid.skotlinton.base.ViewModelConfiguration
 import io.intrepid.skotlinton.utils.RxUtils
@@ -9,18 +9,18 @@ import io.reactivex.rxkotlin.subscribeBy
 
 class Example2ViewModel(configuration: ViewModelConfiguration) : BaseViewModel(configuration) {
 
-    val currentIpAddressText = BehaviorRelay.create<String>()
-    val previousIpAddressVisible = BehaviorRelay.create<Boolean>()
-    val previousIpAddressText = BehaviorRelay.create<String>()
+    val currentIpAddressText = MutableLiveData<String>()
+    val previousIpAddressVisible = MutableLiveData<Boolean>()
+    val previousIpAddressText = MutableLiveData<String>()
 
     init {
-        currentIpAddressText.accept("Retrieving your current IP address")
-        networkDisposables += restApi.getMyIp()
+        currentIpAddressText.value = "Retrieving your current IP address"
+        disposables += restApi.getMyIp()
                 .subscribeOnIoObserveOnUi()
                 .subscribeBy(
                         onSuccess = {
                             val ip = it.ip
-                            currentIpAddressText.accept("Your current IP address is $ip")
+                            currentIpAddressText.value = "Your current IP address is $ip"
                             userSettings.lastIp = ip
                         },
                         onError = RxUtils.logError()
@@ -28,10 +28,10 @@ class Example2ViewModel(configuration: ViewModelConfiguration) : BaseViewModel(c
 
         val lastIp = userSettings.lastIp
         if (lastIp.isNullOrEmpty()) {
-            previousIpAddressVisible.accept(false)
+            previousIpAddressVisible.value = false
         } else {
-            previousIpAddressVisible.accept(true)
-            previousIpAddressText.accept("Your previous IP address is $lastIp")
+            previousIpAddressVisible.value = true
+            previousIpAddressText.value = "Your previous IP address is $lastIp"
         }
     }
 }

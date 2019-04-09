@@ -1,11 +1,13 @@
 package io.intrepid.skotlinton.base
 
 import android.os.Bundle
-import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import io.intrepid.skotlinton.utils.ViewEvent
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxkotlin.subscribeBy
 
 /**
  * Base class for activities that will have some business logic instead of just hosting a fragment.
@@ -13,10 +15,6 @@ import io.reactivex.disposables.CompositeDisposable
  * instead
  */
 abstract class BaseMvvmActivity<VM : BaseViewModel> : BaseActivity() {
-
-    protected val onPauseDisposable = CompositeDisposable()
-    protected val onStopDisposable = CompositeDisposable()
-    protected val onDestroyDisposable = CompositeDisposable()
 
     @Suppress("UNCHECKED_CAST")
     protected val viewModel: VM by lazy(LazyThreadSafetyMode.NONE) {
@@ -31,6 +29,8 @@ abstract class BaseMvvmActivity<VM : BaseViewModel> : BaseActivity() {
 
     abstract val viewModelClass: Class<out ViewModel>
     abstract fun createViewModel(configuration: ViewModelConfiguration): VM
+
+    private val viewEventDisposables = CompositeDisposable()
 
     /**
      * Override [onViewCreated] to handle any logic that needs to occur right after inflating the view.
@@ -48,20 +48,18 @@ abstract class BaseMvvmActivity<VM : BaseViewModel> : BaseActivity() {
 
     }
 
-    override fun onPause() {
-        super.onPause()
-        onPauseDisposable.clear()
+    override fun onStart() {
+        super.onStart()
+        viewEventDisposables += viewModel.eventPublisher.subscribeBy(onNext = {
+            onViewEvent(it)
+        })
     }
 
-    @CallSuper
     override fun onStop() {
         super.onStop()
-        onStopDisposable.clear()
+        viewEventDisposables.clear()
     }
 
-    @CallSuper
-    override fun onDestroy() {
-        super.onDestroy()
-        onDestroyDisposable.clear()
+    protected open fun onViewEvent(event: ViewEvent) {
     }
 }
