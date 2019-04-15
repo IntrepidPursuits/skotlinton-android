@@ -16,6 +16,11 @@ import butterknife.ButterKnife
 import butterknife.Unbinder
 import io.intrepid.skotlinton.SkotlintonApplication
 import io.intrepid.skotlinton.utils.LiveDataObserver
+import io.intrepid.skotlinton.utils.ViewEvent
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxkotlin.subscribeBy
 import timber.log.Timber
 
 abstract class BaseFragment<out VM : BaseViewModel> : Fragment(), LiveDataObserver {
@@ -36,6 +41,8 @@ abstract class BaseFragment<out VM : BaseViewModel> : Fragment(), LiveDataObserv
         }
         ViewModelProviders.of(this, factory).get(viewModelClass) as VM
     }
+
+    private val viewEventDisposables = CompositeDisposable()
 
     abstract val viewModelClass: Class<out ViewModel>
     abstract fun createViewModel(configuration: ViewModelConfiguration): VM
@@ -91,6 +98,11 @@ abstract class BaseFragment<out VM : BaseViewModel> : Fragment(), LiveDataObserv
     override fun onStart() {
         Timber.v("Lifecycle onStart: $this")
         super.onStart()
+        viewEventDisposables += viewModel.eventObservable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy(onNext = {
+                    onViewEvent(it)
+                })
     }
 
     @CallSuper
@@ -128,5 +140,8 @@ abstract class BaseFragment<out VM : BaseViewModel> : Fragment(), LiveDataObserv
     override fun onDetach() {
         Timber.v("Lifecycle onDetach: $this from $context")
         super.onDetach()
+    }
+
+    protected open fun onViewEvent(event: ViewEvent) {
     }
 }

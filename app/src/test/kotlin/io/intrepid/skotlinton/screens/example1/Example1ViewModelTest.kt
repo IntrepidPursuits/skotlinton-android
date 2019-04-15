@@ -15,7 +15,7 @@ internal class Example1ViewModelTest : ViewModelTestBase() {
     @Before
     fun setup() {
         viewModel = Example1ViewModel(testConfiguration)
-        eventObserver = viewModel.eventPublisher.test()
+        eventObserver = viewModel.eventObservable.test()
     }
 
     @Test

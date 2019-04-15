@@ -167,7 +167,7 @@ dependencies {
     // need to explicitly declare this as AS 3.3 somehow can't run the test without this
     // https://github.com/MarkusAmshove/Kluent/issues/130
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
-    testImplementation "android.arch.core:core-testing:1.1.1"
+    testImplementation "androidx.arch.core:core-testing:2.0.1"
 
     // UI tests
     androidTestImplementation junitLib

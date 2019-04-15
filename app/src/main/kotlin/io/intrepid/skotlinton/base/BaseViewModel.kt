@@ -19,7 +19,8 @@ open class BaseViewModel(configuration: ViewModelConfiguration) : ViewModel() {
 
     protected val disposables = CompositeDisposable()
 
-    val eventPublisher: PublishRelay<ViewEvent> = PublishRelay.create()
+    private val eventPublisher: PublishRelay<ViewEvent> = PublishRelay.create()
+    val eventObservable: Observable<ViewEvent> = eventPublisher
 
     protected fun sendViewEvent(viewEvent: ViewEvent) = eventPublisher.accept(viewEvent)
 

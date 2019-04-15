@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import io.intrepid.skotlinton.utils.ViewEvent
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
@@ -27,10 +28,10 @@ abstract class BaseMvvmActivity<VM : BaseViewModel> : BaseActivity() {
         ViewModelProviders.of(this, factory).get(viewModelClass) as VM
     }
 
+    private val viewEventDisposables = CompositeDisposable()
+
     abstract val viewModelClass: Class<out ViewModel>
     abstract fun createViewModel(configuration: ViewModelConfiguration): VM
-
-    private val viewEventDisposables = CompositeDisposable()
 
     /**
      * Override [onViewCreated] to handle any logic that needs to occur right after inflating the view.
@@ -50,9 +51,11 @@ abstract class BaseMvvmActivity<VM : BaseViewModel> : BaseActivity() {
 
     override fun onStart() {
         super.onStart()
-        viewEventDisposables += viewModel.eventPublisher.subscribeBy(onNext = {
-            onViewEvent(it)
-        })
+        viewEventDisposables += viewModel.eventObservable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy(onNext = {
+                    onViewEvent(it)
+                })
     }
 
     override fun onStop() {

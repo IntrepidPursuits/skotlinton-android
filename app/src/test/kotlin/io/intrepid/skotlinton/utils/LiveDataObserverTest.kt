@@ -6,22 +6,23 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.MutableLiveData
+import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import io.intrepid.skotlinton.testutils.LiveDataTestBase
 import org.amshove.kluent.shouldEqual
 import org.junit.Before
 import org.junit.Test
 
 class LiveDataObserverTest : LiveDataTestBase() {
-    private val lifecycleOwner = mock<LifecycleOwner>()
+    private val lifecycleOwner: LifecycleOwner = mock {
+        on { lifecycle } doAnswer { lifecycleRegistry }
+    }
     private val mockObserver = MockObserver(lifecycleOwner)
     private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
 
     @Before
     fun setup() {
-        whenever(lifecycleOwner.lifecycle).thenReturn(lifecycleRegistry)
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
     }
 

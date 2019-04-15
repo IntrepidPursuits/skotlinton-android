@@ -18,7 +18,7 @@ interface LiveDataObserver {
     }
 
     fun LiveData<Boolean>.bindToVisibility(view: View) {
-        observe { visible -> visible.let { view.visibility = if (it) View.VISIBLE else View.GONE } }
+        observe { view.visibility = if (it) View.VISIBLE else View.GONE }
     }
 
     fun LiveData<String>.bindToText(view: TextView) {
