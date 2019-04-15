@@ -25,7 +25,7 @@ class Example2Fragment : BaseFragment<Example2ViewModel>() {
     override fun onViewCreated(savedInstanceState: Bundle?) {
         super.onViewCreated(savedInstanceState)
 
-        viewModel.apply {
+        with(viewModel) {
             currentIpAddressText.bindToText(currentIpView)
             previousIpAddressText.bindToText(previousIpView)
             previousIpAddressVisible.bindToVisibility(previousIpView)

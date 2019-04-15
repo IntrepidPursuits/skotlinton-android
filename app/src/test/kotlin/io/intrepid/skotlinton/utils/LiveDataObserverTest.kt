@@ -2,6 +2,7 @@ package io.intrepid.skotlinton.utils
 
 import android.view.View
 import android.widget.TextView
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
@@ -9,12 +10,16 @@ import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
-import io.intrepid.skotlinton.testutils.LiveDataTestBase
 import org.amshove.kluent.shouldEqual
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
-class LiveDataObserverTest : LiveDataTestBase() {
+class LiveDataObserverTest {
+    @Rule
+    @JvmField
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
+
     private val lifecycleOwner: LifecycleOwner = mock {
         on { lifecycle } doAnswer { lifecycleRegistry }
     }
@@ -31,7 +36,7 @@ class LiveDataObserverTest : LiveDataTestBase() {
         var observedValue: String? = null
 
         val liveData = MutableLiveData<String>()
-        mockObserver.apply {
+        with(mockObserver) {
             liveData.observe {
                 observedValue = it
             }
@@ -46,7 +51,7 @@ class LiveDataObserverTest : LiveDataTestBase() {
         val view = mock<View>()
 
         val liveData = MutableLiveData<Boolean>()
-        mockObserver.apply {
+        with(mockObserver) {
             liveData.bindToVisibility(view)
         }
         liveData.value = true
@@ -59,7 +64,7 @@ class LiveDataObserverTest : LiveDataTestBase() {
         val view = mock<View>()
 
         val liveData = MutableLiveData<Boolean>()
-        mockObserver.apply {
+        with(mockObserver) {
             liveData.bindToVisibility(view)
         }
         liveData.value = false
@@ -72,7 +77,7 @@ class LiveDataObserverTest : LiveDataTestBase() {
         val view = mock<TextView>()
 
         val liveData = MutableLiveData<String>()
-        mockObserver.apply {
+        with(mockObserver) {
             liveData.bindToText(view)
         }
         liveData.value = "hello"
