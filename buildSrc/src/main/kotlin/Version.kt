@@ -1,5 +1,5 @@
 object Version {
-    val gitShortHash: String = "git rev-parse --short HEAD".executeShell()
+    val gitShortHash: String = "git rev-parse --short HEAD".executeShell().trim()
     val gitHash = "git rev-parse HEAD".executeShell()
     val buildNumber: String? = System.getenv("BUILD_NUMBER")
 
