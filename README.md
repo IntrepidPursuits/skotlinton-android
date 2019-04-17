@@ -71,6 +71,8 @@ There are 2 different Jenkins builds for this project:
 - skotlinton-android - This is run every time something is merged into the develop branch. It runs the unit tests, generates a QA build, and uploads it to the OTA link.
 - skotlinton-android-pr - This is run every time a PR is created. It runs the unit tests and reports the result back to the GitHub PR page.
 
+Jenkins will run `prCheck` gradle task when checking PRs, and `continuousBuild` task on the main branch after the PR is merged. You can run these tasks locally to ensure the code pass all checks before submitting the PR.
+
 ## Testing
 ### Unit Tests
 Unit tests exist under the "test" directory. They can be run using the standard commands. ex. `./gradlew testDebugUnitTest`
@@ -79,7 +81,7 @@ Unit tests exist under the "test" directory. They can be run using the standard 
 UI (Espresso) tests exist under the "androidTest" directory. The project also uses [Spoon](https://github.com/square/spoon) and its [gradle plugin](https://github.com/stanfy/spoon-gradle-plugin) to run instrumentation tests and generate a easy to read report. To run an instrumentation test, use `./gradlew spoon`.
 
 ### Code Coverage
-Code coverage configuration are handled by [coverage.gradle](app/coverage.gradle). To generate a code coverage report, use `./gradlew testCoverage`. This will run both unit and instrumentation tests and merge the result of both tests into a single report.
+Code coverage configurations are handled by [CodeCoverage.kt](buildSrc/src/main/kotlin/CodeCoverage.kt). To generate a code coverage report, use `./gradlew coverageReportDebugCombinedTest`. This will run both unit and instrumentation tests and merge the result of both tests into a single report. To enforce minimum code coverage, run `./gradlew coverageMinimumDebugCombinedTest`. Replace `Combined` with `Unit` or `Ui` if you just want to run one type of test.
 
 ## Architecture
 ### Model-View-ViewModel
