@@ -10,14 +10,12 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 
-open class BaseViewModel(configuration: ViewModelConfiguration) : ViewModel() {
+open class BaseViewModel(commonDependencies: CommonViewModelDependencies) : ViewModel() {
 
-    protected val ioScheduler = configuration.ioScheduler
-    protected val uiScheduler = configuration.uiScheduler
-    protected val userSettings = configuration.userSettings
-    protected val restApi = configuration.restApi
-    protected val timeProvider = configuration.timeProvider
-    protected val crashReporter = configuration.crashReporter
+    protected val ioScheduler = commonDependencies.ioScheduler
+    protected val uiScheduler = commonDependencies.uiScheduler
+    protected val restApi = commonDependencies.restApi
+    protected val crashReporter = commonDependencies.crashReporter
 
     protected val disposables = CompositeDisposable()
 

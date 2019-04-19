@@ -4,11 +4,14 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import io.intrepid.skotlinton.di.ActivityComponent
+import io.intrepid.skotlinton.di.ActivityModule
 import io.intrepid.skotlinton.utils.ViewEvent
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import javax.inject.Inject
 
 /**
  * Base class for activities that will have some business logic instead of just hosting a fragment.
@@ -21,8 +24,7 @@ abstract class BaseMvvmActivity<VM : BaseViewModel> : BaseActivity() {
     protected val viewModel: VM by lazy(LazyThreadSafetyMode.NONE) {
         val factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                val configuration = skotlintonApplication.getViewModelConfiguration()
-                return createViewModel(configuration) as T
+                return createViewModel(commonViewModelDependencies) as T
             }
         }
         ViewModelProviders.of(this, factory).get(viewModelClass) as VM
@@ -30,8 +32,14 @@ abstract class BaseMvvmActivity<VM : BaseViewModel> : BaseActivity() {
 
     private val viewEventDisposables = CompositeDisposable()
 
+    // All subclass should just override this and call `component.inject(this)`. Due to Dagger limitations, this can't
+    // be done in the base class
+    abstract fun injectDagger(component: ActivityComponent)
     abstract val viewModelClass: Class<out ViewModel>
-    abstract fun createViewModel(configuration: ViewModelConfiguration): VM
+    abstract fun createViewModel(commonDependencies: CommonViewModelDependencies): VM
+
+    @Inject
+    lateinit var commonViewModelDependencies: CommonViewModelDependencies
 
     /**
      * Override [onViewCreated] to handle any logic that needs to occur right after inflating the view.
@@ -39,6 +47,8 @@ abstract class BaseMvvmActivity<VM : BaseViewModel> : BaseActivity() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val activityComponent = skotlintonApplication.component.activityComponent(ActivityModule())
+        injectDagger(activityComponent)
         onViewCreated(savedInstanceState)
     }
 

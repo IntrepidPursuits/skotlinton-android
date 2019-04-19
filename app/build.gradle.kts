@@ -1,5 +1,3 @@
-import com.android.builder.internal.ClassFieldImpl
-
 plugins {
     id("com.android.application")
     id("spoon")
@@ -139,6 +137,11 @@ dependencies {
     // Other
     implementation("io.intrepid.commonutils:commonutils:0.2.3")
 
+    val daggerVersion = "2.22.1"
+    implementation("com.google.dagger:dagger:$daggerVersion")
+    kapt("com.google.dagger:dagger-compiler:$daggerVersion")
+    kaptAndroidTest("com.google.dagger:dagger-compiler:$daggerVersion")
+
     // LeakCanary
     val leakCanaryVersion = "1.6.3"
     debugImplementation("com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion")
@@ -227,7 +230,8 @@ val coverageClassDirs = fileTree("$buildDir/tmp/kotlin-classes/$buildVariantDire
             "**/BuildConfig.*",
             "**/Manifest*.*",
             "com/android/**/*.class",
-            "**/*_ViewBind*" // ButterKnife auto generated classes
+            "**/*_ViewBind*", // ButterKnife auto generated classes
+            "**/di/**"
     ))
 }
 val unitTestCoverageData = "$buildDir/jacoco/test${buildVariant}UnitTest.exec"

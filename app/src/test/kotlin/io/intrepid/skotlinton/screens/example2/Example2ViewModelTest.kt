@@ -3,12 +3,17 @@ package io.intrepid.skotlinton.screens.example2
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.intrepid.skotlinton.models.IpModel
+import io.intrepid.skotlinton.settings.UserSettings
 import io.intrepid.skotlinton.testutils.ViewModelTestBase
 import io.reactivex.Single
 import org.amshove.kluent.shouldEqual
 import org.junit.Test
+import org.mockito.Mock
 
 internal class Example2ViewModelTest : ViewModelTestBase() {
+
+    @Mock
+    lateinit var mockUserSettings: UserSettings
 
     private lateinit var viewModel: Example2ViewModel
 
@@ -22,12 +27,12 @@ internal class Example2ViewModelTest : ViewModelTestBase() {
         whenever(mockRestApi.getMyIp()).thenReturn(Single.just(mockIpModel))
         whenever(mockUserSettings.lastIp).thenReturn(mockPreviousIp)
 
-        viewModel = Example2ViewModel(testConfiguration)
+        viewModel = Example2ViewModel(commonDependencies, mockUserSettings)
 
         viewModel.currentIpAddressText.value shouldEqual "Retrieving your current IP address"
         viewModel.previousIpAddressText.value shouldEqual "Your previous IP address is 127.0.0.2"
         viewModel.previousIpAddressVisible.value shouldEqual true
-        testConfiguration.triggerRxSchedulers()
+        commonDependencies.triggerRxSchedulers()
         viewModel.currentIpAddressText.value shouldEqual "Your current IP address is 127.0.0.1"
         verify(mockUserSettings).lastIp = mockIp
     }
@@ -38,7 +43,7 @@ internal class Example2ViewModelTest : ViewModelTestBase() {
         whenever(mockRestApi.getMyIp()).thenReturn(Single.error(Throwable()))
         whenever(mockUserSettings.lastIp).thenReturn("")
 
-        viewModel = Example2ViewModel(testConfiguration)
+        viewModel = Example2ViewModel(commonDependencies, mockUserSettings)
         viewModel.previousIpAddressVisible.value shouldEqual false
     }
 }
