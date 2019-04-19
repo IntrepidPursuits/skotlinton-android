@@ -2,14 +2,9 @@ package io.intrepid.skotlinton
 
 import android.app.Application
 import com.squareup.leakcanary.LeakCanary
-import io.intrepid.skotlinton.base.ViewModelConfiguration
+import io.intrepid.skotlinton.di.*
 import io.intrepid.skotlinton.logging.CrashlyticsReporter
 import io.intrepid.skotlinton.logging.TimberConfig
-import io.intrepid.skotlinton.rest.RetrofitClient
-import io.intrepid.skotlinton.settings.SharedPreferencesManager
-import io.intrepid.skotlinton.utils.SystemTimeProvider
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 
 open class SkotlintonApplication : Application() {
 
@@ -21,20 +16,22 @@ open class SkotlintonApplication : Application() {
         CrashlyticsReporter.init(this)
 
         TimberConfig.init(CrashlyticsReporter)
+
+        setupDagger()
+
+    }
+
+    lateinit var component: ApplicationComponent
+
+    protected open fun setupDagger() {
+        component = DaggerApplicationComponent.builder()
+                .applicationModule(ApplicationModule(this))
+                .networkingModule(NetworkingModule())
+                .rxModule(RxModule())
+                .build()
     }
 
     protected open fun setupLeakCanary() {
         LeakCanary.install(this)
-    }
-
-    open fun getViewModelConfiguration(): ViewModelConfiguration {
-        return ViewModelConfiguration(
-                Schedulers.io(),
-                AndroidSchedulers.mainThread(),
-                SharedPreferencesManager.getInstance(this),
-                RetrofitClient.restApi,
-                SystemTimeProvider,
-                CrashlyticsReporter
-        )
     }
 }

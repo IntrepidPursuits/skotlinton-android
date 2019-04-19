@@ -3,12 +3,16 @@ package io.intrepid.skotlinton.screens.example2
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.intrepid.skotlinton.base.BaseViewModel
-import io.intrepid.skotlinton.base.ViewModelConfiguration
+import io.intrepid.skotlinton.base.CommonViewModelDependencies
+import io.intrepid.skotlinton.settings.UserSettings
 import io.intrepid.skotlinton.utils.RxUtils
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 
-class Example2ViewModel(configuration: ViewModelConfiguration) : BaseViewModel(configuration) {
+class Example2ViewModel(
+        commonDependencies: CommonViewModelDependencies,
+        private val userSettings: UserSettings
+) : BaseViewModel(commonDependencies) {
 
     val currentIpAddressText: LiveData<String> = MutableLiveData()
     val previousIpAddressVisible: LiveData<Boolean> = MutableLiveData()

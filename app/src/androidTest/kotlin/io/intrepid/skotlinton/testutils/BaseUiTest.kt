@@ -1,6 +1,7 @@
 package io.intrepid.skotlinton.testutils
 
-import io.intrepid.skotlinton.InstrumentationTestApplication
+import io.intrepid.skotlinton.di.TestApplicationModule
+import io.intrepid.skotlinton.di.TestNetworkingModule
 import org.junit.After
 import org.junit.Rule
 import org.mockito.junit.MockitoJUnit
@@ -13,7 +14,7 @@ abstract class BaseUiTest {
 
     @After
     fun tearDown() {
-        InstrumentationTestApplication.clearRestApiOverride()
-        InstrumentationTestApplication.clearUserSettingsOverride()
+        TestApplicationModule.reset()
+        TestNetworkingModule.reset()
     }
 }

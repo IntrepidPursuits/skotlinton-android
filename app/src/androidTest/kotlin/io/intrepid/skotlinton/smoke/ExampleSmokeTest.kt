@@ -8,8 +8,9 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.filters.SmallTest
 import androidx.test.rule.ActivityTestRule
 import com.nhaarman.mockitokotlin2.whenever
-import io.intrepid.skotlinton.InstrumentationTestApplication
 import io.intrepid.skotlinton.R
+import io.intrepid.skotlinton.di.TestApplicationModule
+import io.intrepid.skotlinton.di.TestNetworkingModule
 import io.intrepid.skotlinton.rest.TestRestClient
 import io.intrepid.skotlinton.rules.MockServerRule
 import io.intrepid.skotlinton.screens.example1.Example1Activity
@@ -34,8 +35,8 @@ class ExampleSmokeTest : BaseUiTest() {
 
     @Before
     fun setUp() {
-        InstrumentationTestApplication.overrideRestApi(TestRestClient.getRestApi(mockServerRule))
-        InstrumentationTestApplication.overrideUserSettings(mockUserSettings)
+        TestNetworkingModule.restApi = TestRestClient.getRestApi(mockServerRule)
+        TestApplicationModule.userSettings = mockUserSettings
     }
 
     @Test

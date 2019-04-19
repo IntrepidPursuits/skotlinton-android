@@ -15,6 +15,8 @@ import androidx.lifecycle.ViewModelProviders
 import butterknife.ButterKnife
 import butterknife.Unbinder
 import io.intrepid.skotlinton.SkotlintonApplication
+import io.intrepid.skotlinton.di.ActivityComponent
+import io.intrepid.skotlinton.di.ActivityModule
 import io.intrepid.skotlinton.utils.LiveDataObserver
 import io.intrepid.skotlinton.utils.ViewEvent
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -22,6 +24,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import timber.log.Timber
+import javax.inject.Inject
 
 abstract class BaseFragment<out VM : BaseViewModel> : Fragment(), LiveDataObserver {
 
@@ -35,8 +38,7 @@ abstract class BaseFragment<out VM : BaseViewModel> : Fragment(), LiveDataObserv
     protected val viewModel: VM by lazy(LazyThreadSafetyMode.NONE) {
         val factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                val configuration = skotlintonApplication.getViewModelConfiguration()
-                return createViewModel(configuration) as T
+                return createViewModel(commonViewModelDependencies) as T
             }
         }
         ViewModelProviders.of(this, factory).get(viewModelClass) as VM
@@ -44,8 +46,14 @@ abstract class BaseFragment<out VM : BaseViewModel> : Fragment(), LiveDataObserv
 
     private val viewEventDisposables = CompositeDisposable()
 
+    // All subclass should just override this and call `component.inject(this)`. Due to Dagger limitations, this can't
+    // be done in the base class
+    abstract fun injectDagger(component: ActivityComponent)
     abstract val viewModelClass: Class<out ViewModel>
-    abstract fun createViewModel(configuration: ViewModelConfiguration): VM
+    abstract fun createViewModel(commonDependencies: CommonViewModelDependencies): VM
+
+    @Inject
+    lateinit var commonViewModelDependencies: CommonViewModelDependencies
 
     private var unbinder: Unbinder? = null
 
@@ -59,6 +67,8 @@ abstract class BaseFragment<out VM : BaseViewModel> : Fragment(), LiveDataObserv
     override fun onCreate(savedInstanceState: Bundle?) {
         Timber.v("Lifecycle onCreate: $this")
         super.onCreate(savedInstanceState)
+        val activityComponent = skotlintonApplication.component.activityComponent(ActivityModule())
+        injectDagger(activityComponent)
     }
 
     /**
