@@ -121,6 +121,7 @@ abstract class BaseFragment<out VM : BaseViewModel> : Fragment(), LiveDataObserv
     override fun onStop() {
         Timber.v("Lifecycle onStop: $this")
         super.onStop()
+        viewEventDisposables.clear()
     }
 
     @CallSuper

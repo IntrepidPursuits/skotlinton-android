@@ -3,12 +3,12 @@ package io.intrepid.skotlinton.base
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.jakewharton.rxrelay2.PublishRelay
 import io.intrepid.skotlinton.utils.ViewEvent
 import io.intrepid.skotlinton.utils.applySchedulers
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.subjects.PublishSubject
 
 open class BaseViewModel(configuration: ViewModelConfiguration) : ViewModel() {
 
@@ -21,7 +21,7 @@ open class BaseViewModel(configuration: ViewModelConfiguration) : ViewModel() {
 
     protected val disposables = CompositeDisposable()
 
-    private val eventPublisher: PublishRelay<ViewEvent> = PublishRelay.create()
+    private val eventPublisher: PublishSubject<ViewEvent> = PublishSubject.create()
     val eventObservable: Observable<ViewEvent> = eventPublisher
 
     // Works exactly the same way as MutableLiveData.value
@@ -34,7 +34,7 @@ open class BaseViewModel(configuration: ViewModelConfiguration) : ViewModel() {
             (this as MutableLiveData<T>).value = value
         }
 
-    protected fun sendViewEvent(viewEvent: ViewEvent) = eventPublisher.accept(viewEvent)
+    protected fun sendViewEvent(viewEvent: ViewEvent) = eventPublisher.onNext(viewEvent)
 
     protected fun <T> Observable<T>.subscribeOnIoObserveOnUi(): Observable<T> = applySchedulers(ioScheduler, uiScheduler)
 
