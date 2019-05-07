@@ -34,7 +34,6 @@ tasks.register<Delete>("clean") {
 
 // Top level tasks that should be run by CI
 val verificationTasks = listOf(
-        "app:assembleDebug",
         "app:coverageMinimumDebugUnitTest",
         "app:lintDebug"
 )
