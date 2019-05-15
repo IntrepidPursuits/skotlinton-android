@@ -104,7 +104,8 @@ dependencies {
     val lifecycleVersion = "2.0.0"
     implementation("androidx.lifecycle:lifecycle-extensions:$lifecycleVersion")
     kapt("androidx.lifecycle:lifecycle-compiler:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-reactivestreams-ktx:$lifecycleVersion")
+    implementation("androidx.activity:activity-ktx:1.0.0-alpha08")
+    implementation("androidx.fragment:fragment-ktx:1.1.0-alpha08")
 
     // Google play services
     val googlePlayVersion = "16.1.0"

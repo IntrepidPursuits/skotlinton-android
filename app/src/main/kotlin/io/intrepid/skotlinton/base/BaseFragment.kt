@@ -8,10 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import butterknife.ButterKnife
 import butterknife.Unbinder
 import io.intrepid.skotlinton.SkotlintonApplication
@@ -26,7 +26,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import timber.log.Timber
 import javax.inject.Inject
 
-abstract class BaseFragment<out VM : BaseViewModel> : Fragment(), LiveDataObserver {
+abstract class BaseFragment : Fragment(), LiveDataObserver {
 
     override val liveDataLifecycleOwner: LifecycleOwner get() = viewLifecycleOwner
 
@@ -34,14 +34,16 @@ abstract class BaseFragment<out VM : BaseViewModel> : Fragment(), LiveDataObserv
         get() = requireActivity().application as SkotlintonApplication
     protected abstract val layoutResourceId: Int
 
-    @Suppress("UNCHECKED_CAST")
-    protected val viewModel: VM by lazy(LazyThreadSafetyMode.NONE) {
-        val factory = object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return createViewModel(commonViewModelDependencies) as T
+    protected abstract val viewModel: BaseViewModel
+    protected inline fun <reified VM : BaseViewModel> viewModelFactory(crossinline creator: () -> VM): Lazy<VM> {
+        return viewModels {
+            object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    @Suppress("UNCHECKED_CAST")
+                    return creator() as T
+                }
             }
         }
-        ViewModelProviders.of(this, factory).get(viewModelClass) as VM
     }
 
     private val viewEventDisposables = CompositeDisposable()
@@ -49,8 +51,6 @@ abstract class BaseFragment<out VM : BaseViewModel> : Fragment(), LiveDataObserv
     // All subclass should just override this and call `component.inject(this)`. Due to Dagger limitations, this can't
     // be done in the base class
     abstract fun injectDagger(component: ActivityComponent)
-    abstract val viewModelClass: Class<out ViewModel>
-    abstract fun createViewModel(commonDependencies: CommonViewModelDependencies): VM
 
     @Inject
     lateinit var commonViewModelDependencies: CommonViewModelDependencies
@@ -76,9 +76,9 @@ abstract class BaseFragment<out VM : BaseViewModel> : Fragment(), LiveDataObserv
      * onViewCreated is called immediately after onCreateView
      */
     final override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         Timber.v("Lifecycle onCreateView: $this")
         val view = inflater.inflate(layoutResourceId, container, false)

@@ -5,12 +5,11 @@ import android.widget.TextView
 import butterknife.BindView
 import io.intrepid.skotlinton.R
 import io.intrepid.skotlinton.base.BaseFragment
-import io.intrepid.skotlinton.base.CommonViewModelDependencies
 import io.intrepid.skotlinton.di.ActivityComponent
 import io.intrepid.skotlinton.settings.UserSettings
 import javax.inject.Inject
 
-class Example2Fragment : BaseFragment<Example2ViewModel>() {
+class Example2Fragment : BaseFragment() {
 
     @BindView(R.id.example2_current_ip)
     internal lateinit var currentIpView: TextView
@@ -22,14 +21,12 @@ class Example2Fragment : BaseFragment<Example2ViewModel>() {
 
     override val layoutResourceId: Int = R.layout.fragment_example2
 
-    override val viewModelClass = Example2ViewModel::class.java
+    override val viewModel: Example2ViewModel by viewModelFactory {
+        Example2ViewModel(commonViewModelDependencies, userSettings)
+    }
 
     override fun injectDagger(component: ActivityComponent) {
         component.inject(this)
-    }
-
-    override fun createViewModel(commonDependencies: CommonViewModelDependencies): Example2ViewModel {
-        return Example2ViewModel(commonDependencies, userSettings)
     }
 
     override fun onViewCreated(savedInstanceState: Bundle?) {

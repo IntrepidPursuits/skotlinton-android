@@ -1,9 +1,9 @@
 package io.intrepid.skotlinton.base
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import io.intrepid.skotlinton.di.ActivityComponent
 import io.intrepid.skotlinton.di.ActivityModule
 import io.intrepid.skotlinton.utils.ViewEvent
@@ -18,16 +18,18 @@ import javax.inject.Inject
  * If the activity is only going to act as a container for a fragment, use {@link BaseFragmentActivity}
  * instead
  */
-abstract class BaseMvvmActivity<VM : BaseViewModel> : BaseActivity() {
+abstract class BaseMvvmActivity : BaseActivity() {
 
-    @Suppress("UNCHECKED_CAST")
-    protected val viewModel: VM by lazy(LazyThreadSafetyMode.NONE) {
-        val factory = object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return createViewModel(commonViewModelDependencies) as T
+    protected abstract val viewModel: BaseViewModel
+    protected inline fun <reified VM : BaseViewModel> viewModelFactory(crossinline creator: () -> VM): Lazy<VM> {
+        return viewModels {
+            object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    @Suppress("UNCHECKED_CAST")
+                    return creator() as T
+                }
             }
         }
-        ViewModelProviders.of(this, factory).get(viewModelClass) as VM
     }
 
     private val viewEventDisposables = CompositeDisposable()
@@ -35,8 +37,6 @@ abstract class BaseMvvmActivity<VM : BaseViewModel> : BaseActivity() {
     // All subclass should just override this and call `component.inject(this)`. Due to Dagger limitations, this can't
     // be done in the base class
     abstract fun injectDagger(component: ActivityComponent)
-    abstract val viewModelClass: Class<out ViewModel>
-    abstract fun createViewModel(commonDependencies: CommonViewModelDependencies): VM
 
     @Inject
     lateinit var commonViewModelDependencies: CommonViewModelDependencies

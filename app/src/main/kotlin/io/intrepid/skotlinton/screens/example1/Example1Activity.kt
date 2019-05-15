@@ -2,11 +2,9 @@ package io.intrepid.skotlinton.screens.example1
 
 import android.content.Intent
 import android.widget.Toast
-import androidx.lifecycle.ViewModel
 import butterknife.OnClick
 import io.intrepid.skotlinton.R
 import io.intrepid.skotlinton.base.BaseMvvmActivity
-import io.intrepid.skotlinton.base.CommonViewModelDependencies
 import io.intrepid.skotlinton.di.ActivityComponent
 import io.intrepid.skotlinton.screens.example2.Example2Activity
 import io.intrepid.skotlinton.utils.TimeProvider
@@ -14,21 +12,19 @@ import io.intrepid.skotlinton.utils.ViewEvent
 import javax.inject.Inject
 
 @Suppress("ProtectedInFinal")
-class Example1Activity : BaseMvvmActivity<Example1ViewModel>() {
+class Example1Activity : BaseMvvmActivity() {
 
     @Inject
     lateinit var timeProvider: TimeProvider
 
     override val layoutResourceId: Int = R.layout.activity_example1
 
-    override val viewModelClass: Class<out ViewModel> = Example1ViewModel::class.java
+    override val viewModel: Example1ViewModel by viewModelFactory {
+        Example1ViewModel(commonViewModelDependencies, timeProvider)
+    }
 
     override fun injectDagger(component: ActivityComponent) {
         component.inject(this)
-    }
-
-    override fun createViewModel(commonDependencies: CommonViewModelDependencies): Example1ViewModel {
-        return Example1ViewModel(commonDependencies, timeProvider)
     }
 
     override fun onViewEvent(event: ViewEvent) {
