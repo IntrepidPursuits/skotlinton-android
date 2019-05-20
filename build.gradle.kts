@@ -18,8 +18,6 @@ buildscript {
     }
 }
 
-apply<JacocoPlugin>()
-
 allprojects {
     repositories {
         google()
