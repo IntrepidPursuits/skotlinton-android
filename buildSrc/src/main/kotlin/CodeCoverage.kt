@@ -12,7 +12,7 @@ import org.gradle.testing.jacoco.tasks.JacocoCoverageVerification
 import org.gradle.testing.jacoco.tasks.JacocoReport
 
 object CodeCoverage {
-    const val JACOCO_VERSION = "0.8.3"
+    const val JACOCO_VERSION = "0.8.4"
 
     val generatedClasses = setOf(
             "**/R.class",
@@ -119,8 +119,8 @@ object CodeCoverage {
                                  unitTestExcludedClasses: Set<String>,
                                  uiTestExcludedClasses: Set<String>
     ) {
-        val buildVariant = variant.name.capitalize()
-        val buildVariantDirectory = "${variant.flavorName.capitalize()}${variant.buildType.name.capitalize()}"
+        val variantNameCapitalized = variant.name.capitalize()
+        val variantNameDecapitalized = variant.name.decapitalize()
         val buildDir = project.buildDir
 
         fun createJacocoTasks(testType: String,
@@ -128,9 +128,9 @@ object CodeCoverage {
                               minimumCoverage: Double,
                               excludedClasses: Set<String>,
                               ecData: ConfigurableFileCollection) {
-            val reportTaskName = "coverageReport${buildVariant}${testType}Test"
+            val reportTaskName = "coverageReport${variantNameCapitalized}${testType}Test"
             val coverageSourceDirs = project.files("src/main/kotlin")
-            val coverageClassDirs = project.fileTree("$buildDir/tmp/kotlin-classes/$buildVariantDirectory") {
+            val coverageClassDirs = project.fileTree("$buildDir/tmp/kotlin-classes/$variantNameDecapitalized") {
                 setExcludes(excludedClasses)
             }
 
@@ -154,7 +154,7 @@ object CodeCoverage {
                 }
             }
 
-            project.tasks.register<JacocoCoverageVerification>("coverageMinimum$buildVariant${testType}Test") {
+            project.tasks.register<JacocoCoverageVerification>("coverageMinimum$variantNameCapitalized${testType}Test") {
                 dependsOn(reportTaskName)
                 group = "verification"
 
@@ -172,19 +172,19 @@ object CodeCoverage {
             }
         }
 
-        val unitTestExecutionData = "$buildDir/jacoco/test${buildVariant}UnitTest.exec"
+        val unitTestExecutionData = "$buildDir/jacoco/test${variantNameCapitalized}UnitTest.exec"
         createJacocoTasks(
                 testType = "Unit",
-                testTasks = arrayOf("test${buildVariant}UnitTest"),
+                testTasks = arrayOf("test${variantNameCapitalized}UnitTest"),
                 minimumCoverage = minimumUnitCoverage,
                 excludedClasses = commonExcludedClasses + unitTestExcludedClasses,
                 ecData = project.files(unitTestExecutionData)
         )
 
-        val uiTestExecutionData = "$buildDir/spoon-output/$buildVariantDirectory/coverage/merged-coverage.ec"
+        val uiTestExecutionData = "$buildDir/spoon-output/$variantNameDecapitalized/coverage/merged-coverage.ec"
         createJacocoTasks(
                 testType = "Ui",
-                testTasks = arrayOf("spoon${buildVariant}AndroidTest"),
+                testTasks = arrayOf("spoon${variantNameCapitalized}AndroidTest"),
                 minimumCoverage = minimumUiCoverage,
                 excludedClasses = commonExcludedClasses + uiTestExcludedClasses,
                 ecData = project.files(uiTestExecutionData)
@@ -192,7 +192,7 @@ object CodeCoverage {
 
         createJacocoTasks(
                 testType = "Combined",
-                testTasks = arrayOf("test${buildVariant}UnitTest", "spoon${buildVariant}AndroidTest"),
+                testTasks = arrayOf("test${variantNameCapitalized}UnitTest", "spoon${variantNameCapitalized}AndroidTest"),
                 minimumCoverage = minimumCombinedCoverage,
                 excludedClasses = commonExcludedClasses,
                 ecData = project.files(unitTestExecutionData, uiTestExecutionData)
