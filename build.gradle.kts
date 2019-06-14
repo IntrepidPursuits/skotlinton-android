@@ -18,8 +18,6 @@ buildscript {
     }
 }
 
-apply<JacocoPlugin>()
-
 allprojects {
     repositories {
         google()
@@ -30,4 +28,26 @@ allprojects {
 
 tasks.register<Delete>("clean") {
     delete(rootProject.buildDir)
+}
+
+// Top level tasks that should be run by CI
+val verificationTasks = listOf(
+        "app:coverageMinimumDebugUnitTest",
+        "app:lintDebug"
+)
+tasks.register("prCheck") {
+    val tasks = verificationTasks + listOf(
+            "app:assembleDebug"
+    )
+    dependsOn(tasks)
+    group = "verification"
+    description = "Includes all the tasks that should be run during a PR check"
+}
+tasks.register("continuousBuild") {
+    val tasks = verificationTasks + listOf(
+            "app:assembleQa"
+    )
+    dependsOn(tasks)
+    group = "build"
+    description = "Includes all the tasks that should be run on the main branch once a PR is merged in"
 }
