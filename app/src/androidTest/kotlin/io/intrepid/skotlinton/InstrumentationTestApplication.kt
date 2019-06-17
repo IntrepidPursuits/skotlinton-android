@@ -2,26 +2,26 @@ package io.intrepid.skotlinton
 
 import android.os.AsyncTask
 import io.intrepid.skotlinton.base.ViewModelConfiguration
-import io.intrepid.skotlinton.logging.CrashReporter
 import io.intrepid.skotlinton.rest.RestApi
 import io.intrepid.skotlinton.rest.RetrofitClient
 import io.intrepid.skotlinton.settings.SharedPreferencesManager
 import io.intrepid.skotlinton.settings.UserSettings
-import io.intrepid.skotlinton.utils.TimeProvider
+import io.mockk.mockk
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import org.mockito.Mockito
+import kotlinx.coroutines.MainScope
 
 class InstrumentationTestApplication : SkotlintonApplication() {
     override fun getViewModelConfiguration(): ViewModelConfiguration {
         return ViewModelConfiguration(
-                // using AsyncTask executor since Espresso automatically waits for it to clear before proceeding
-                Schedulers.from(AsyncTask.SERIAL_EXECUTOR),
-                AndroidSchedulers.mainThread(),
-                userSettingsOverride ?: SharedPreferencesManager.getInstance(this),
-                restApiOverride ?: RetrofitClient.restApi,
-                Mockito.mock(TimeProvider::class.java),
-                Mockito.mock(CrashReporter::class.java)
+            // using AsyncTask executor since Espresso automatically waits for it to clear before proceeding
+            Schedulers.from(AsyncTask.SERIAL_EXECUTOR),
+            AndroidSchedulers.mainThread(),
+            userSettingsOverride ?: SharedPreferencesManager.getInstance(this),
+            restApiOverride ?: RetrofitClient.restApi,
+            mockk(),
+            mockk(),
+            MainScope()
         )
     }
 

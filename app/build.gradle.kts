@@ -84,12 +84,23 @@ android {
     }
 }
 
+//https://github.com/mockk/mockk/issues/281
+configurations.all {
+    resolutionStrategy {
+        force("org.objenesis:objenesis:2.6")
+    }
+}
+
 dependencies {
     val qaImplementation by configurations
 
     implementation(fileTree("libs") { include("*.jar") })
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Dependencies.kotlin}")
+
+    val coroutineVersion = "1.3.0-M1"
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutineVersion")
 
     implementation("com.crashlytics.sdk.android:crashlytics:2.9.8")
 
@@ -116,7 +127,7 @@ dependencies {
     implementation("io.reactivex.rxjava2:rxkotlin:2.3.0")
 
     // Jake Wharton/Square
-    val retrofitVersion = "2.5.0"
+    val retrofitVersion = "2.6.0"
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
     implementation("com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion")
@@ -144,31 +155,25 @@ dependencies {
 
     // Common test dependencies
     val junitLib = "junit:junit:4.12"
-    val mockitoVersion = "2.23.4"
-    val mockitoLib = "org.mockito:mockito-core:$mockitoVersion"
-    val mockitoKotlinLib = "com.nhaarman.mockitokotlin2:mockito-kotlin:2.0.0"
+    val mockkVersion = "1.9.3"
     val kluentLib = "org.amshove.kluent:kluent-android:1.46"
 
     // Unit tests
     testImplementation(junitLib)
-    testImplementation(mockitoLib)
+    testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation(supportAnnotationLib)
-    testImplementation(mockitoKotlinLib)
     testImplementation(kluentLib)
     // need to explicitly declare this as AS 3.3 somehow can't run the test without this
     // https://github.com/MarkusAmshove/Kluent/issues/130
     testImplementation("org.jetbrains.kotlin:kotlin-test:${Dependencies.kotlin}")
     testImplementation("androidx.arch.core:core-testing:2.0.1")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutineVersion")
 
     // UI tests
     androidTestImplementation(junitLib)
-    androidTestImplementation(mockitoLib)
+    androidTestImplementation("io.mockk:mockk-android:$mockkVersion")
     androidTestImplementation(supportAnnotationLib)
-    androidTestImplementation(mockitoKotlinLib) {
-        exclude(module = "kotlin-reflect")
-    }
     androidTestImplementation(kluentLib)
-    androidTestImplementation("org.mockito:mockito-android:$mockitoVersion")
 
     androidTestImplementation("androidx.test:core:1.1.0")
     androidTestImplementation("androidx.test:runner:1.1.1")

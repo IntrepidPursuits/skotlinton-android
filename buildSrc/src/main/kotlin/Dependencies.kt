@@ -1,3 +1,3 @@
 object Dependencies {
-    val kotlin = "1.3.11"
+    val kotlin = "1.3.31"
 }

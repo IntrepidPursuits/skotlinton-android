@@ -6,6 +6,7 @@ import io.intrepid.skotlinton.rest.RestApi
 import io.intrepid.skotlinton.settings.UserSettings
 import io.intrepid.skotlinton.utils.TimeProvider
 import io.reactivex.schedulers.TestScheduler
+import kotlinx.coroutines.test.TestCoroutineScope
 import org.junit.Before
 import org.junit.Rule
 import org.mockito.junit.MockitoJUnit
@@ -26,6 +27,7 @@ abstract class ViewModelTestBase {
     protected lateinit var mockUserSettings: UserSettings
     protected lateinit var mockTimeProvider: TimeProvider
     protected lateinit var mockCrashReporter: CrashReporter
+    protected lateinit var coroutineScope: TestCoroutineScope
 
     @Before
     fun baseSetup() {
@@ -36,5 +38,6 @@ abstract class ViewModelTestBase {
         mockUserSettings = testConfiguration.userSettings
         mockTimeProvider = testConfiguration.timeProvider
         mockCrashReporter = testConfiguration.crashReporter
+        coroutineScope = testConfiguration.coroutineScope
     }
 }

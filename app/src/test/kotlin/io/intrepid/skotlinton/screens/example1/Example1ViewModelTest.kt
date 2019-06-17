@@ -1,8 +1,8 @@
 package io.intrepid.skotlinton.screens.example1
 
-import com.nhaarman.mockitokotlin2.whenever
 import io.intrepid.skotlinton.testutils.ViewModelTestBase
 import io.intrepid.skotlinton.utils.ViewEvent
+import io.mockk.every
 import io.reactivex.observers.TestObserver
 import org.junit.Before
 import org.junit.Test
@@ -26,7 +26,7 @@ internal class Example1ViewModelTest : ViewModelTestBase() {
 
     @Test
     fun onShowToastClick() {
-        whenever(mockTimeProvider.currentTimeMillis).thenReturn(1000)
+        every { mockTimeProvider.currentTimeMillis } returns 1000
         viewModel.onShowToastClick()
         eventObserver.assertValue { it is Example1ViewEvent.ShowCurrentTimeToast && it.message == "Current unix time is 1000" }
     }

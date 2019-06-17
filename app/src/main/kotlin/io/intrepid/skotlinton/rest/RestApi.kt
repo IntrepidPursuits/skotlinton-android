@@ -6,5 +6,5 @@ import retrofit2.http.GET
 
 interface RestApi {
     @GET("/?format=json")
-    fun getMyIp(): Single<IpModel>
+    suspend fun getMyIp(): IpModel
 }

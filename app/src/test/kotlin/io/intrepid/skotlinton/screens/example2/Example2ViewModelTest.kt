@@ -1,10 +1,11 @@
 package io.intrepid.skotlinton.screens.example2
 
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import io.intrepid.skotlinton.models.IpModel
 import io.intrepid.skotlinton.testutils.ViewModelTestBase
-import io.reactivex.Single
+import io.mockk.coEvery
+import io.mockk.every
+import io.mockk.verify
+import kotlinx.coroutines.delay
 import org.amshove.kluent.shouldEqual
 import org.junit.Test
 
@@ -19,24 +20,32 @@ internal class Example2ViewModelTest : ViewModelTestBase() {
 
         val mockIpModel = IpModel()
         mockIpModel.ip = mockIp
-        whenever(mockRestApi.getMyIp()).thenReturn(Single.just(mockIpModel))
-        whenever(mockUserSettings.lastIp).thenReturn(mockPreviousIp)
+
+        coEvery {
+            mockRestApi.getMyIp()
+        } coAnswers {
+            delay(1000)
+            mockIpModel
+        }
+        every { mockUserSettings.lastIp } returns mockPreviousIp
 
         viewModel = Example2ViewModel(testConfiguration)
 
         viewModel.currentIpAddressText.value shouldEqual "Retrieving your current IP address"
         viewModel.previousIpAddressText.value shouldEqual "Your previous IP address is 127.0.0.2"
         viewModel.previousIpAddressVisible.value shouldEqual true
-        testConfiguration.triggerRxSchedulers()
+
+        coroutineScope.advanceTimeBy(1000)
+
         viewModel.currentIpAddressText.value shouldEqual "Your current IP address is 127.0.0.1"
-        verify(mockUserSettings).lastIp = mockIp
+
+        verify { mockUserSettings.lastIp = mockIp }
     }
 
     @Test
-    @Throws(Exception::class)
     fun init_NoPreviousIp() {
-        whenever(mockRestApi.getMyIp()).thenReturn(Single.error(Throwable()))
-        whenever(mockUserSettings.lastIp).thenReturn("")
+        coEvery { mockRestApi.getMyIp() } throws RuntimeException()
+        every { mockUserSettings.lastIp } returns ""
 
         viewModel = Example2ViewModel(testConfiguration)
         viewModel.previousIpAddressVisible.value shouldEqual false
