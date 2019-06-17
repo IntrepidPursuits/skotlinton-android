@@ -130,7 +130,6 @@ dependencies {
     val retrofitVersion = "2.6.0"
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
-    implementation("com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion")
     implementation("com.google.code.gson:gson:2.8.5")
 
     val okhttpVersion = "3.12.0"

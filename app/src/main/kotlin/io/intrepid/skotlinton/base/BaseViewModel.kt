@@ -38,11 +38,6 @@ open class BaseViewModel(configuration: ViewModelConfiguration) : ViewModel() {
 
     protected fun sendViewEvent(viewEvent: ViewEvent) = eventPublisher.onNext(viewEvent)
 
-    protected fun <T> Observable<T>.subscribeOnIoObserveOnUi(): Observable<T> =
-        applySchedulers(ioScheduler, uiScheduler)
-
-    protected fun <T> Single<T>.subscribeOnIoObserveOnUi(): Single<T> = applySchedulers(ioScheduler, uiScheduler)
-
     override fun onCleared() {
         super.onCleared()
         coroutineScope.cancel()
