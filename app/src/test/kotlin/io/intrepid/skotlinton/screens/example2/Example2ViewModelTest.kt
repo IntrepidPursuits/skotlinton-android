@@ -11,6 +11,8 @@ import org.junit.Test
 
 internal class Example2ViewModelTest : ViewModelTestBase() {
 
+    private val simulatedDelay: Long = 1000
+
     private lateinit var viewModel: Example2ViewModel
 
     @Test
@@ -24,7 +26,7 @@ internal class Example2ViewModelTest : ViewModelTestBase() {
         coEvery {
             mockRestApi.getMyIp()
         } coAnswers {
-            delay(1000)
+            delay(simulatedDelay)
             mockIpModel
         }
         every { mockUserSettings.lastIp } returns mockPreviousIp
@@ -35,7 +37,7 @@ internal class Example2ViewModelTest : ViewModelTestBase() {
         viewModel.previousIpAddressText.value shouldEqual "Your previous IP address is 127.0.0.2"
         viewModel.previousIpAddressVisible.value shouldEqual true
 
-        coroutineScope.advanceTimeBy(1000)
+        coroutineScope.advanceTimeBy(simulatedDelay)
 
         viewModel.currentIpAddressText.value shouldEqual "Your current IP address is 127.0.0.1"
 

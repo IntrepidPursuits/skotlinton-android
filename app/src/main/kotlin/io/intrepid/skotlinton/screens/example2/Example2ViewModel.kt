@@ -21,7 +21,7 @@ class Example2ViewModel(configuration: ViewModelConfiguration) : BaseViewModel(c
                 currentIpAddressText.latestValue = "Your current IP address is $ip"
                 userSettings.lastIp = ip
             } catch (e: Exception) {
-                Timber.w(e, "Can't not retrieve ip")
+                Timber.w(e, "Can't retrieve ip")
             }
         }
 
