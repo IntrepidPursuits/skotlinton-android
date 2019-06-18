@@ -114,7 +114,6 @@ dependencies {
     implementation("io.reactivex.rxjava2:rxjava:2.2.5")
     implementation("io.reactivex.rxjava2:rxandroid:2.1.0")
     implementation("io.reactivex.rxjava2:rxkotlin:2.3.0")
-    implementation("com.jakewharton.rxbinding2:rxbinding-kotlin:2.2.0")
 
     // Jake Wharton/Square
     val retrofitVersion = "2.5.0"
