@@ -2,6 +2,7 @@ package io.intrepid.skotlinton.testutils
 
 import android.os.Environment
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.runner.screenshot.BasicScreenCaptureProcessor
 import androidx.test.runner.screenshot.ScreenCaptureProcessor
 import androidx.test.runner.screenshot.Screenshot
@@ -18,6 +19,7 @@ abstract class BaseUiTest {
     val testNameRule = TestName()
 
     private lateinit var screenCaptureProcessor: ScreenCaptureProcessor
+    private lateinit var coroutineIdlingResource: CoroutineIdlingResource
 
     @Before
     fun baseSetUp() {
@@ -28,10 +30,15 @@ abstract class BaseUiTest {
             takeScreenshot("test_failure")
             throw error
         }
+
+        coroutineIdlingResource = CoroutineIdlingResource(InstrumentationTestApplication.mainDispatcher)
+        IdlingRegistry.getInstance().register(coroutineIdlingResource)
     }
 
     @After
     fun baseTearDown() {
+        IdlingRegistry.getInstance().unregister(coroutineIdlingResource)
+
         InstrumentationTestApplication.clearRestApiOverride()
         InstrumentationTestApplication.clearUserSettingsOverride()
     }
