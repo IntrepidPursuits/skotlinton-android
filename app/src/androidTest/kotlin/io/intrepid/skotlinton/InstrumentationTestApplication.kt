@@ -6,12 +6,16 @@ import io.intrepid.skotlinton.rest.RestApi
 import io.intrepid.skotlinton.rest.RetrofitClient
 import io.intrepid.skotlinton.settings.SharedPreferencesManager
 import io.intrepid.skotlinton.settings.UserSettings
+import io.intrepid.skotlinton.testutils.InterceptableDispatcher
 import io.mockk.mockk
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 
 class InstrumentationTestApplication : SkotlintonApplication() {
+
     override fun getViewModelConfiguration(): ViewModelConfiguration {
         return ViewModelConfiguration(
             // using AsyncTask executor since Espresso automatically waits for it to clear before proceeding
@@ -21,7 +25,7 @@ class InstrumentationTestApplication : SkotlintonApplication() {
             restApiOverride ?: RetrofitClient.restApi,
             mockk(),
             mockk(),
-            MainScope()
+            CoroutineScope(SupervisorJob() + mainDispatcher)
         )
     }
 
@@ -30,6 +34,8 @@ class InstrumentationTestApplication : SkotlintonApplication() {
     }
 
     companion object {
+        val mainDispatcher = InterceptableDispatcher(Dispatchers.Main)
+
         private var restApiOverride: RestApi? = null
         private var userSettingsOverride: UserSettings? = null
 
