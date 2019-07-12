@@ -9,6 +9,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
+import kotlinx.coroutines.cancel
 
 open class BaseViewModel(configuration: ViewModelConfiguration) : ViewModel() {
 
@@ -18,6 +19,7 @@ open class BaseViewModel(configuration: ViewModelConfiguration) : ViewModel() {
     protected val restApi = configuration.restApi
     protected val timeProvider = configuration.timeProvider
     protected val crashReporter = configuration.crashReporter
+    protected val coroutineScope = configuration.coroutineScope
 
     protected val disposables = CompositeDisposable()
 
@@ -36,12 +38,9 @@ open class BaseViewModel(configuration: ViewModelConfiguration) : ViewModel() {
 
     protected fun sendViewEvent(viewEvent: ViewEvent) = eventPublisher.onNext(viewEvent)
 
-    protected fun <T> Observable<T>.subscribeOnIoObserveOnUi(): Observable<T> = applySchedulers(ioScheduler, uiScheduler)
-
-    protected fun <T> Single<T>.subscribeOnIoObserveOnUi(): Single<T> = applySchedulers(ioScheduler, uiScheduler)
-
     override fun onCleared() {
         super.onCleared()
+        coroutineScope.cancel()
         disposables.clear()
     }
 }

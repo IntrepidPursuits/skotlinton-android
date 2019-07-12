@@ -10,6 +10,7 @@ import io.intrepid.skotlinton.settings.SharedPreferencesManager
 import io.intrepid.skotlinton.utils.SystemTimeProvider
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.MainScope
 
 open class SkotlintonApplication : Application() {
 
@@ -29,12 +30,13 @@ open class SkotlintonApplication : Application() {
 
     open fun getViewModelConfiguration(): ViewModelConfiguration {
         return ViewModelConfiguration(
-                Schedulers.io(),
-                AndroidSchedulers.mainThread(),
-                SharedPreferencesManager.getInstance(this),
-                RetrofitClient.restApi,
-                SystemTimeProvider,
-                CrashlyticsReporter
+            Schedulers.io(),
+            AndroidSchedulers.mainThread(),
+            SharedPreferencesManager.getInstance(this),
+            RetrofitClient.restApi,
+            SystemTimeProvider,
+            CrashlyticsReporter,
+            MainScope()
         )
     }
 }

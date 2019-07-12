@@ -4,9 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.intrepid.skotlinton.base.BaseViewModel
 import io.intrepid.skotlinton.base.ViewModelConfiguration
-import io.intrepid.skotlinton.utils.RxUtils
-import io.reactivex.rxkotlin.plusAssign
-import io.reactivex.rxkotlin.subscribeBy
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class Example2ViewModel(configuration: ViewModelConfiguration) : BaseViewModel(configuration) {
 
@@ -16,16 +15,15 @@ class Example2ViewModel(configuration: ViewModelConfiguration) : BaseViewModel(c
 
     init {
         currentIpAddressText.latestValue = "Retrieving your current IP address"
-        disposables += restApi.getMyIp()
-                .subscribeOnIoObserveOnUi()
-                .subscribeBy(
-                        onSuccess = {
-                            val ip = it.ip
-                            currentIpAddressText.latestValue = "Your current IP address is $ip"
-                            userSettings.lastIp = ip
-                        },
-                        onError = RxUtils.logError()
-                )
+        coroutineScope.launch {
+            try {
+                val ip = restApi.getMyIp().ip
+                currentIpAddressText.latestValue = "Your current IP address is $ip"
+                userSettings.lastIp = ip
+            } catch (e: Exception) {
+                Timber.w(e, "Can't retrieve ip")
+            }
+        }
 
         val lastIp = userSettings.lastIp
         if (lastIp.isNullOrEmpty()) {

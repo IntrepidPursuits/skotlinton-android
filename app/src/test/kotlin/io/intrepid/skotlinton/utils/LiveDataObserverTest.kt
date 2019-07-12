@@ -7,9 +7,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.MutableLiveData
-import com.nhaarman.mockitokotlin2.doAnswer
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import org.amshove.kluent.shouldEqual
 import org.junit.Before
 import org.junit.Rule
@@ -20,8 +20,8 @@ class LiveDataObserverTest {
     @JvmField
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private val lifecycleOwner: LifecycleOwner = mock {
-        on { lifecycle } doAnswer { lifecycleRegistry }
+    private val lifecycleOwner: LifecycleOwner = mockk {
+        every { lifecycle } answers { lifecycleRegistry }
     }
     private val mockObserver = MockObserver(lifecycleOwner)
     private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
@@ -48,7 +48,7 @@ class LiveDataObserverTest {
 
     @Test
     fun bindToVisibility_Visible() {
-        val view = mock<View>()
+        val view = mockk<View>(relaxed = true)
 
         val liveData = MutableLiveData<Boolean>()
         with(mockObserver) {
@@ -56,12 +56,12 @@ class LiveDataObserverTest {
         }
         liveData.value = true
 
-        verify(view).visibility = View.VISIBLE
+        verify { view.visibility = View.VISIBLE }
     }
 
     @Test
     fun bindToVisibility_Gone() {
-        val view = mock<View>()
+        val view = mockk<View>(relaxed = true)
 
         val liveData = MutableLiveData<Boolean>()
         with(mockObserver) {
@@ -69,12 +69,12 @@ class LiveDataObserverTest {
         }
         liveData.value = false
 
-        verify(view).visibility = View.GONE
+        verify { view.visibility = View.GONE }
     }
 
     @Test
     fun bindToText() {
-        val view = mock<TextView>()
+        val view = mockk<TextView>(relaxed = true)
 
         val liveData = MutableLiveData<String>()
         with(mockObserver) {
@@ -82,7 +82,7 @@ class LiveDataObserverTest {
         }
         liveData.value = "hello"
 
-        verify(view).text = "hello"
+        verify { view.text = "hello" }
     }
 }
 
