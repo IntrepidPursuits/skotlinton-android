@@ -8,7 +8,7 @@ import io.intrepid.skotlinton.R
 import io.intrepid.skotlinton.base.BaseMvvmActivity
 import io.intrepid.skotlinton.base.ViewModelConfiguration
 import io.intrepid.skotlinton.screens.example2.Example2Activity
-import io.reactivex.rxkotlin.plusAssign
+import io.intrepid.skotlinton.utils.ViewEvent
 
 @Suppress("ProtectedInFinal")
 class Example1Activity : BaseMvvmActivity<Example1ViewModel>() {
@@ -21,13 +21,10 @@ class Example1Activity : BaseMvvmActivity<Example1ViewModel>() {
         return Example1ViewModel(configuration)
     }
 
-    override fun onStart() {
-        super.onStart()
-        onStopDisposable += viewModel.eventPublisher.subscribe {
-            when (it) {
-                is Example1ViewEvent.GotoExample2 -> gotoExample2()
-                is Example1ViewEvent.ShowCurrentTimeToast -> showToast(it.message)
-            }
+    override fun onViewEvent(event: ViewEvent) {
+        when (event) {
+            is Example1ViewEvent.GotoExample2 -> gotoExample2()
+            is Example1ViewEvent.ShowCurrentTimeToast -> showToast(event.message)
         }
     }
 

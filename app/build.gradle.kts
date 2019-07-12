@@ -104,7 +104,7 @@ dependencies {
     val lifecycleVersion = "2.0.0"
     implementation("androidx.lifecycle:lifecycle-extensions:$lifecycleVersion")
     kapt("androidx.lifecycle:lifecycle-compiler:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-reactivestreams:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-reactivestreams-ktx:$lifecycleVersion")
 
     // Google play services
     val googlePlayVersion = "16.1.0"
@@ -114,8 +114,6 @@ dependencies {
     implementation("io.reactivex.rxjava2:rxjava:2.2.5")
     implementation("io.reactivex.rxjava2:rxandroid:2.1.0")
     implementation("io.reactivex.rxjava2:rxkotlin:2.3.0")
-    implementation("com.jakewharton.rxrelay2:rxrelay:2.1.0")
-    implementation("com.jakewharton.rxbinding2:rxbinding-kotlin:2.2.0")
 
     // Jake Wharton/Square
     val retrofitVersion = "2.5.0"
@@ -160,6 +158,7 @@ dependencies {
     // need to explicitly declare this as AS 3.3 somehow can't run the test without this
     // https://github.com/MarkusAmshove/Kluent/issues/130
     testImplementation("org.jetbrains.kotlin:kotlin-test:${Dependencies.kotlin}")
+    testImplementation("androidx.arch.core:core-testing:2.0.1")
 
     // UI tests
     androidTestImplementation(junitLib)

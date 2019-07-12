@@ -8,25 +8,28 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import butterknife.ButterKnife
 import butterknife.Unbinder
 import io.intrepid.skotlinton.SkotlintonApplication
+import io.intrepid.skotlinton.utils.LiveDataObserver
+import io.intrepid.skotlinton.utils.ViewEvent
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxkotlin.subscribeBy
 import timber.log.Timber
 
-abstract class BaseFragment<out VM : BaseViewModel> : Fragment() {
+abstract class BaseFragment<out VM : BaseViewModel> : Fragment(), LiveDataObserver {
+
+    override val liveDataLifecycleOwner: LifecycleOwner get() = viewLifecycleOwner
 
     protected val skotlintonApplication: SkotlintonApplication
         get() = requireActivity().application as SkotlintonApplication
     protected abstract val layoutResourceId: Int
-
-    protected val onPauseDisposable = CompositeDisposable()
-    protected val onStopDisposable = CompositeDisposable()
-    protected val onDestroyViewDisposable = CompositeDisposable()
-    protected val onDestroyDisposable = CompositeDisposable()
 
     @Suppress("UNCHECKED_CAST")
     protected val viewModel: VM by lazy(LazyThreadSafetyMode.NONE) {
@@ -38,6 +41,8 @@ abstract class BaseFragment<out VM : BaseViewModel> : Fragment() {
         }
         ViewModelProviders.of(this, factory).get(viewModelClass) as VM
     }
+
+    private val viewEventDisposables = CompositeDisposable()
 
     abstract val viewModelClass: Class<out ViewModel>
     abstract fun createViewModel(configuration: ViewModelConfiguration): VM
@@ -93,6 +98,11 @@ abstract class BaseFragment<out VM : BaseViewModel> : Fragment() {
     override fun onStart() {
         Timber.v("Lifecycle onStart: $this")
         super.onStart()
+        viewEventDisposables += viewModel.eventObservable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy(onNext = {
+                    onViewEvent(it)
+                })
     }
 
     @CallSuper
@@ -105,14 +115,13 @@ abstract class BaseFragment<out VM : BaseViewModel> : Fragment() {
     override fun onPause() {
         Timber.v("Lifecycle onPause: $this")
         super.onPause()
-        onPauseDisposable.clear()
     }
 
     @CallSuper
     override fun onStop() {
         Timber.v("Lifecycle onStop: $this")
         super.onStop()
-        onStopDisposable.clear()
+        viewEventDisposables.clear()
     }
 
     @CallSuper
@@ -120,19 +129,20 @@ abstract class BaseFragment<out VM : BaseViewModel> : Fragment() {
         Timber.v("Lifecycle onDestroyView: $this")
         super.onDestroyView()
         unbinder?.unbind()
-        onDestroyViewDisposable.clear()
     }
 
     @CallSuper
     override fun onDestroy() {
         Timber.v("Lifecycle onDestroy: $this")
         super.onDestroy()
-        onDestroyDisposable.clear()
     }
 
     @CallSuper
     override fun onDetach() {
         Timber.v("Lifecycle onDetach: $this from $context")
         super.onDetach()
+    }
+
+    protected open fun onViewEvent(event: ViewEvent) {
     }
 }

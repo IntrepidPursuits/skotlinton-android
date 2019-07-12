@@ -1,5 +1,6 @@
 package io.intrepid.skotlinton.testutils
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import io.intrepid.skotlinton.logging.CrashReporter
 import io.intrepid.skotlinton.rest.RestApi
 import io.intrepid.skotlinton.settings.UserSettings
@@ -10,10 +11,13 @@ import org.junit.Rule
 import org.mockito.junit.MockitoJUnit
 import org.mockito.junit.MockitoRule
 
-abstract class BaseViewModelTest {
+abstract class ViewModelTestBase {
     @Rule
     @JvmField
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
+    @Rule
+    @JvmField
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     protected lateinit var testConfiguration: TestViewModelConfiguration
     protected lateinit var ioScheduler: TestScheduler

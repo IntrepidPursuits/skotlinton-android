@@ -85,7 +85,7 @@ Code coverage configurations are handled by [CodeCoverage.kt](buildSrc/src/main/
 
 ## Architecture
 ### Model-View-ViewModel
-The app uses the popular MVVM architecture to allow for separation of logic and ease of testing. In this paradigm, all business logic should live inside viewmodel (but they can delegate some tasks to other classes that are injected as dependencies). Activities and fragment will act as "views", they should not have any logic other than passing the user events to the view model and displaying the data. ViewModels will expose view states as Rx Observables (typically backed by BehaviorRelay) which the View can subscribe to.
+The app uses the popular MVVM architecture to allow for separation of logic and ease of testing. In this paradigm, all business logic should live inside viewmodel (but they can delegate some tasks to other classes that are injected as dependencies). Activities and fragment will act as "views", they should not have any logic other than passing the user events to the view model and displaying the data. ViewModels will expose view states as LiveData which the View can observe.
 
 ### Base Classes
 - `BaseActivity`: Base class for all activities. Includes lifecycle logging and view inflation.
