@@ -1,6 +1,10 @@
 package io.intrepid.skotlinton.utils
 
-import io.reactivex.*
+import io.reactivex.Completable
+import io.reactivex.Flowable
+import io.reactivex.Maybe
+import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.schedulers.TestScheduler
 import org.junit.Test
 

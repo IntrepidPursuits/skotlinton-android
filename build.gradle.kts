@@ -15,6 +15,7 @@ buildscript {
         classpath("com.squareup.spoon:spoon-runner:2.0.0-SNAPSHOT") // TODO update/remove this once spoon 2.0.0 is stable
         classpath("io.fabric.tools:gradle:1.26.1")
         classpath("gradle.plugin.io.intrepid:static-analysis:1.2.2")
+        classpath("org.jlleitschuh.gradle:ktlint-gradle:8.0.0")
     }
 }
 
@@ -32,12 +33,13 @@ tasks.register<Delete>("clean") {
 
 // Top level tasks that should be run by CI
 val verificationTasks = listOf(
-        "app:coverageMinimumDebugUnitTest",
-        "app:lintDebug"
+    "app:coverageMinimumDebugUnitTest",
+    "app:ktlintCheck",
+    "app:lintDebug"
 )
 tasks.register("prCheck") {
     val tasks = verificationTasks + listOf(
-            "app:assembleDebug"
+        "app:assembleDebug"
     )
     dependsOn(tasks)
     group = "verification"
@@ -45,7 +47,7 @@ tasks.register("prCheck") {
 }
 tasks.register("continuousBuild") {
     val tasks = verificationTasks + listOf(
-            "app:assembleQa"
+        "app:assembleQa"
     )
     dependsOn(tasks)
     group = "build"

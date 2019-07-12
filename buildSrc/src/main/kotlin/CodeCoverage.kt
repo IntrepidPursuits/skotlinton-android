@@ -15,31 +15,31 @@ object CodeCoverage {
     const val JACOCO_VERSION = "0.8.4"
 
     val generatedClasses = setOf(
-            "**/R.class",
-            "**/R$*.class",
-            "**/BuildConfig.*",
-            "**/Manifest*.*",
-            "com/android/**/*.class",
-            "**/*_ViewBind*" // ButterKnife auto generated classes
+        "**/R.class",
+        "**/R$*.class",
+        "**/BuildConfig.*",
+        "**/Manifest*.*",
+        "com/android/**/*.class",
+        "**/*_ViewBind*" // ButterKnife auto generated classes
     )
 
     val androidClasses = setOf(
-            "**/*Activity.class",
-            "**/*Activity$*.class",
-            "**/*Fragment.class",
-            "**/*Fragment$*.class",
-            "**/*Service.class",
-            "**/*Service$*.class",
-            "**/*Application.class",
-            "**/*Application$*.class",
-            "**/*Dialog.class",
-            "**/*Dialog$*.class",
-            "**/*Adapter.class",
-            "**/*Adapter$*.class",
-            "**/*ViewHolder.class",
-            "**/*ViewHolder$*.class",
-            "**/*Animation.class",
-            "**/*Animation$*.class"
+        "**/*Activity.class",
+        "**/*Activity$*.class",
+        "**/*Fragment.class",
+        "**/*Fragment$*.class",
+        "**/*Service.class",
+        "**/*Service$*.class",
+        "**/*Application.class",
+        "**/*Application$*.class",
+        "**/*Dialog.class",
+        "**/*Dialog$*.class",
+        "**/*Adapter.class",
+        "**/*Adapter$*.class",
+        "**/*ViewHolder.class",
+        "**/*ViewHolder$*.class",
+        "**/*Animation.class",
+        "**/*Animation$*.class"
     )
 
     /***
@@ -61,13 +61,13 @@ object CodeCoverage {
      * @param uiTestExcludedClasses classes that are excluded only from UI tests
      */
     fun configure(
-            project: Project,
-            minimumCombinedCoverage: Double = 0.7,
-            minimumUnitCoverage: Double = 0.5,
-            minimumUiCoverage: Double = 0.6,
-            commonExcludedClasses: Set<String> = generatedClasses,
-            unitTestExcludedClasses: Set<String> = androidClasses,
-            uiTestExcludedClasses: Set<String> = emptySet()
+        project: Project,
+        minimumCombinedCoverage: Double = 0.7,
+        minimumUnitCoverage: Double = 0.5,
+        minimumUiCoverage: Double = 0.6,
+        commonExcludedClasses: Set<String> = generatedClasses,
+        unitTestExcludedClasses: Set<String> = androidClasses,
+        uiTestExcludedClasses: Set<String> = emptySet()
     ) {
         with(project) {
             plugins.apply("jacoco")
@@ -98,36 +98,40 @@ object CodeCoverage {
         project.afterEvaluate {
             allVariants(project)?.forEach {
                 configureVariant(
-                        it,
-                        project,
-                        minimumCombinedCoverage,
-                        minimumUnitCoverage,
-                        minimumUiCoverage,
-                        commonExcludedClasses,
-                        unitTestExcludedClasses,
-                        uiTestExcludedClasses)
+                    it,
+                    project,
+                    minimumCombinedCoverage,
+                    minimumUnitCoverage,
+                    minimumUiCoverage,
+                    commonExcludedClasses,
+                    unitTestExcludedClasses,
+                    uiTestExcludedClasses
+                )
             }
         }
     }
 
-    private fun configureVariant(variant: BaseVariant,
-                                 project: Project,
-                                 minimumCombinedCoverage: Double,
-                                 minimumUnitCoverage: Double,
-                                 minimumUiCoverage: Double,
-                                 commonExcludedClasses: Set<String>,
-                                 unitTestExcludedClasses: Set<String>,
-                                 uiTestExcludedClasses: Set<String>
+    private fun configureVariant(
+        variant: BaseVariant,
+        project: Project,
+        minimumCombinedCoverage: Double,
+        minimumUnitCoverage: Double,
+        minimumUiCoverage: Double,
+        commonExcludedClasses: Set<String>,
+        unitTestExcludedClasses: Set<String>,
+        uiTestExcludedClasses: Set<String>
     ) {
         val variantNameCapitalized = variant.name.capitalize()
         val variantNameDecapitalized = variant.name.decapitalize()
         val buildDir = project.buildDir
 
-        fun createJacocoTasks(testType: String,
-                              testTasks: Array<String>,
-                              minimumCoverage: Double,
-                              excludedClasses: Set<String>,
-                              ecData: ConfigurableFileCollection) {
+        fun createJacocoTasks(
+            testType: String,
+            testTasks: Array<String>,
+            minimumCoverage: Double,
+            excludedClasses: Set<String>,
+            ecData: ConfigurableFileCollection
+        ) {
             val reportTaskName = "coverageReport${variantNameCapitalized}${testType}Test"
             val coverageSourceDirs = project.files("src/main/kotlin")
             val coverageClassDirs = project.fileTree("$buildDir/tmp/kotlin-classes/$variantNameDecapitalized") {
@@ -174,28 +178,28 @@ object CodeCoverage {
 
         val unitTestExecutionData = "$buildDir/jacoco/test${variantNameCapitalized}UnitTest.exec"
         createJacocoTasks(
-                testType = "Unit",
-                testTasks = arrayOf("test${variantNameCapitalized}UnitTest"),
-                minimumCoverage = minimumUnitCoverage,
-                excludedClasses = commonExcludedClasses + unitTestExcludedClasses,
-                ecData = project.files(unitTestExecutionData)
+            testType = "Unit",
+            testTasks = arrayOf("test${variantNameCapitalized}UnitTest"),
+            minimumCoverage = minimumUnitCoverage,
+            excludedClasses = commonExcludedClasses + unitTestExcludedClasses,
+            ecData = project.files(unitTestExecutionData)
         )
 
         val uiTestExecutionData = "$buildDir/spoon-output/$variantNameDecapitalized/coverage/merged-coverage.ec"
         createJacocoTasks(
-                testType = "Ui",
-                testTasks = arrayOf("spoon${variantNameCapitalized}AndroidTest"),
-                minimumCoverage = minimumUiCoverage,
-                excludedClasses = commonExcludedClasses + uiTestExcludedClasses,
-                ecData = project.files(uiTestExecutionData)
+            testType = "Ui",
+            testTasks = arrayOf("spoon${variantNameCapitalized}AndroidTest"),
+            minimumCoverage = minimumUiCoverage,
+            excludedClasses = commonExcludedClasses + uiTestExcludedClasses,
+            ecData = project.files(uiTestExecutionData)
         )
 
         createJacocoTasks(
-                testType = "Combined",
-                testTasks = arrayOf("test${variantNameCapitalized}UnitTest", "spoon${variantNameCapitalized}AndroidTest"),
-                minimumCoverage = minimumCombinedCoverage,
-                excludedClasses = commonExcludedClasses,
-                ecData = project.files(unitTestExecutionData, uiTestExecutionData)
+            testType = "Combined",
+            testTasks = arrayOf("test${variantNameCapitalized}UnitTest", "spoon${variantNameCapitalized}AndroidTest"),
+            minimumCoverage = minimumCombinedCoverage,
+            excludedClasses = commonExcludedClasses,
+            ecData = project.files(unitTestExecutionData, uiTestExecutionData)
         )
     }
 }

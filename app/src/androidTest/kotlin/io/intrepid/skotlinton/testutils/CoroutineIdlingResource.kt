@@ -17,7 +17,6 @@ class CoroutineIdlingResource(dispatcher: InterceptableDispatcher) : IdlingResou
                     callback?.onTransitionToIdle()
                 }
             }
-
         }
     }
 

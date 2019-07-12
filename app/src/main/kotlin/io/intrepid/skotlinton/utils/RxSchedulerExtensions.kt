@@ -1,6 +1,11 @@
 package io.intrepid.skotlinton.utils
 
-import io.reactivex.*
+import io.reactivex.Completable
+import io.reactivex.Flowable
+import io.reactivex.Maybe
+import io.reactivex.Observable
+import io.reactivex.Scheduler
+import io.reactivex.Single
 
 fun <T> Observable<T>.applySchedulers(subscribeOnScheduler: Scheduler, observeOnScheduler: Scheduler): Observable<T> {
     return this.subscribeOn(subscribeOnScheduler).observeOn(observeOnScheduler)

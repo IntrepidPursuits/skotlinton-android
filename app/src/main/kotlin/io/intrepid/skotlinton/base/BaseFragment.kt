@@ -99,10 +99,10 @@ abstract class BaseFragment<out VM : BaseViewModel> : Fragment(), LiveDataObserv
         Timber.v("Lifecycle onStart: $this")
         super.onStart()
         viewEventDisposables += viewModel.eventObservable
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy(onNext = {
-                    onViewEvent(it)
-                })
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(onNext = {
+                onViewEvent(it)
+            })
     }
 
     @CallSuper
