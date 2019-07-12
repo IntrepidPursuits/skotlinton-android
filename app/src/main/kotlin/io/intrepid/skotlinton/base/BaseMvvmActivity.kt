@@ -46,16 +46,15 @@ abstract class BaseMvvmActivity<VM : BaseViewModel> : BaseActivity() {
      * Override this method to do any additional view initialization (ex: setup RecycleView adapter)
      */
     protected open fun onViewCreated(savedInstanceState: Bundle?) {
-
     }
 
     override fun onStart() {
         super.onStart()
         viewEventDisposables += viewModel.eventObservable
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy(onNext = {
-                    onViewEvent(it)
-                })
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(onNext = {
+                onViewEvent(it)
+            })
     }
 
     override fun onStop() {

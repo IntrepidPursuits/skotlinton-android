@@ -6,7 +6,7 @@ import com.android.build.gradle.api.BaseVariant
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.findPlugin
-import java.util.*
+import java.util.Properties
 
 private var localProperties: Properties? = null
 

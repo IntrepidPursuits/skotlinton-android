@@ -4,8 +4,9 @@ plugins {
     id("kotlin-android")
     id("kotlin-kapt")
     id("io.intrepid.static-analysis")
+    id("org.jlleitschuh.gradle.ktlint")
     // Uncomment the following line after adding fabric.properties file
-    //id("io.fabric")
+    // id("io.fabric")
 
     id("jacoco")
 }
@@ -84,7 +85,11 @@ android {
     }
 }
 
-//https://github.com/mockk/mockk/issues/281
+ktlint {
+    version.set("0.33.0")
+}
+
+// https://github.com/mockk/mockk/issues/281
 configurations.all {
     resolutionStrategy {
         force("org.objenesis:objenesis:2.6")
